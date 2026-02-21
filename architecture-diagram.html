@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TCLMarket2 — Architecture Diagram (Updated)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 32px 24px 60px;
+    }
+
+    /* ─── Header ─── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f59e0b, #ef4444, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .page-header p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    .badge {
+      display: inline-block;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-top: 8px;
+    }
+
+    /* ─── Main Grid ─── */
+    .diagram {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      max-width: 1300px;
+      margin: 0 auto 40px;
+    }
+
+    /* ─── Column ─── */
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .col-header {
+      border-radius: 12px 12px 0 0;
+      padding: 14px 18px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+    .col-header.blue   { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
+    .col-header.orange { background: linear-gradient(135deg, #b45309, #f59e0b); }
+    .col-header.green  { background: linear-gradient(135deg, #065f46, #10b981); }
+
+    /* ─── Box ─── */
+    .box {
+      border-radius: 12px;
+      padding: 16px 18px;
+      border: 1px solid;
+      transition: transform .2s, box-shadow .2s;
+      cursor: default;
+    }
+    .box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    }
+    .box.blue   { background: #1e3a8a22; border-color: #3b82f655; }
+    .box.orange { background: #92400e33; border-color: #f59e0b66; }
+    .box.dark   { background: #1e293b;   border-color: #334155; }
+    .box.purple { background: #4c1d9533; border-color: #8b5cf655; }
+    .box.red    { background: #7f1d1d33; border-color: #ef444455; }
+    .box.green  { background: #064e3b33; border-color: #10b98155; }
+    .box.ws     { background: linear-gradient(135deg,#052e16,#064e3b); border-color: #10b981; }
+    .box.live   { background: #0c1a2e; border-color: #3b82f655; }
+
+    .box-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .box-title .icon { font-size: 1.1rem; }
+
+    .box ul { list-style: none; padding: 0; }
+    .box ul li {
+      padding: 4px 0 4px 14px;
+      position: relative;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .box ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: #64748b;
+    }
+
+    .chip {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin: 2px 2px 0 0;
+    }
+    .chip.open       { background:#065f46; color:#6ee7b7; }
+    .chip.closed     { background:#78350f; color:#fcd34d; }
+    .chip.resolved   { background:#1d4ed8; color:#93c5fd; }
+    .chip.cancelled  { background:#7f1d1d; color:#fca5a5; }
+    .chip.pending    { background:#1e3a8a; color:#bfdbfe; }
+    .chip.won        { background:#064e3b; color:#6ee7b7; }
+    .chip.lost       { background:#450a0a; color:#fca5a5; }
+    .chip.refunded   { background:#4a1d96; color:#ddd6fe; }
+
+    /* ─── Formula Box ─── */
+    .formula {
+      background: #0f172a;
+      border: 1px solid #1e3a8a44;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: #a5b4fc;
+      line-height: 1.7;
+    }
+    .formula .comment { color: #475569; }
+
+    /* ─── DB Cylinders ─── */
+    .db-item {
+      background: #0d2b1d;
+      border: 1px solid #10b98144;
+      border-radius: 10px;
+      padding: 12px 16px;
+      position: relative;
+      transition: transform .2s;
+    }
+    .db-item:hover { transform: translateX(4px); }
+    .db-item::before {
+      content: '🗄';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      opacity: .5;
+    }
+    .db-item .db-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #34d399;
+      margin-bottom: 6px;
+    }
+    .db-item .db-fields {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* ─── Arrows row ─── */
+    .arrows-row {
+      max-width: 1300px;
+      margin: 0 auto 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      text-align: center;
+    }
+    .arrow-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+    }
+    .arrow-box .arrow-label { color: #f59e0b; font-weight: 700; margin-bottom: 4px; }
+    .arrow-box .arrow-desc  { color: #64748b; font-size: 0.75rem; }
+
+    /* ─── Lifecycle / State Machine ─── */
+    .lifecycle {
+      max-width: 1300px;
+      margin: 0 auto 40px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px 28px;
+    }
+    .lifecycle h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #f59e0b;
+      margin-bottom: 20px;
+    }
+    .states {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+    .state-node {
+      background: #0f172a;
+      border: 2px solid;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-align: center;
+      min-width: 120px;
+    }
+    .state-node.open       { border-color: #10b981; color: #6ee7b7; }
+    .state-node.closed     { border-color: #f59e0b; color: #fcd34d; }
+    .state-node.resolved   { border-color: #3b82f6; color: #93c5fd; }
+    .state-node.cancelled  { border-color: #ef4444; color: #fca5a5; }
+
+    .state-arrow {
+      padding: 0 10px;
+      color: #475569;
+      font-size: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.7rem;
+      gap: 2px;
+    }
+    .state-arrow .arr { font-size: 1.4rem; color: #64748b; }
+
+    .state-fork {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .state-fork-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .fork-label {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    /* ─── Concurrency Section ─── */
+    .concurrency {
+      max-width: 1300px;
+      margin: 0 auto 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .code-block {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 12px;
+      padding: 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      line-height: 1.8;
+    }
+    .code-block h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #f59e0b;
+      margin-bottom: 12px;
+    }
+    .code-keyword  { color: #ff7b72; }
+    .code-fn       { color: #d2a8ff; }
+    .code-string   { color: #a5d6ff; }
+    .code-comment  { color: #8b949e; font-style: italic; }
+    .code-var      { color: #e6edf3; }
+    .code-num      { color: #79c0ff; }
+
+    /* ─── Footer ─── */
+    footer {
+      text-align: center;
+      color: #475569;
+      font-size: 0.8rem;
+      margin-top: 20px;
+    }
+    footer a { color: #3b82f6; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>⚡ TCLMarket2 — Architecture Diagram</h1>
+  <p>Prediction Market App inspired by Polymarket — ฉบับปรับปรุงแล้ว</p>
+  <span class="badge">Updated: 20 Feb 2026 · MERN Stack · WebSocket · AMM Odds</span>
+</div>
+
+<!-- ═══ MAIN DIAGRAM ═══ -->
+<div class="diagram">
+
+  <!-- ── COLUMN 1: Frontend ── -->
+  <div class="col">
+    <div class="col-header blue">⚛️ Frontend (React + Vite)</div>
+
+    <div class="box blue">
+      <div class="box-title"><span class="icon">🔐</span>Login / Register</div>
+      <ul>
+        <li>JWT Access Token + Refresh Token</li>
+        <li>Role-based: <strong>user</strong> | <strong>admin</strong></li>
+        <li>Remember Me (Refresh Token)</li>
+      </ul>
+    </div>
+
+    <div class="box blue">
+      <div class="box-title"><span class="icon">📊</span>Dashboard (Market List)</div>
+      <ul>
+        <li>ค้นหา & กรอง Markets</li>
+        <li>Odds Preview Card</li>
+        <li>Status Badge: Open / Closed / Resolved</li>
+      </ul>
+    </div>
+
+    <div class="box blue">
+      <div class="box-title"><span class="icon">📈</span>Market Detail (Place Bet)</div>
+      <ul>
+        <li>Odds Bar Chart (Yes vs No)</li>
+        <li>Bet Form: Choose Side + Enter Stake</li>
+        <li>Payout Preview (คำนวณ Real-time)</li>
+        <li><strong>Live Update</strong> ผ่าน WebSocket</li>
+      </ul>
+    </div>
+
+    <div class="box blue">
+      <div class="box-title"><span class="icon">📋</span>My Bets (History)</div>
+      <ul>
+        <li>รายการ Bet ทั้งหมด</li>
+        <li>Status: <span class="chip pending">pending</span><span class="chip won">won</span><span class="chip lost">lost</span><span class="chip refunded">refunded</span></li>
+        <li>Transaction Log (ฝาก/ถอน/ชนะ/Refund)</li>
+      </ul>
+    </div>
+
+    <div class="box" style="background:#431407aa;border-color:#ea580c88;">
+      <div class="box-title"><span class="icon">🛡️</span>Admin Panel (Protected Route)</div>
+      <ul>
+        <li>สร้าง / แก้ไข Markets</li>
+        <li>ปิด Market / ประกาศผล / ยกเลิก</li>
+        <li>ดู Users & Balance</li>
+      </ul>
+    </div>
+
+    <div class="box ws">
+      <div class="box-title"><span class="icon">⚡</span>Socket.io Client</div>
+      <ul>
+        <li>Join Market Room เมื่อเปิดหน้า Market</li>
+        <li>รับ <code>odds:update</code> → อัปเดต Chart</li>
+        <li>รับ <code>market:resolved</code> → แจ้งเตือน 🔔</li>
+        <li>รับ <code>balance:update</code> → อัปเดต Balance</li>
+      </ul>
+    </div>
+
+    <div class="box live">
+      <div class="box-title"><span class="icon">📡</span>Live Display</div>
+      <div class="formula">
+Yes Odds:  <span style="color:#6ee7b7">65%</span>  (0.65)<br/>
+No  Odds:  <span style="color:#fca5a5">35%</span>  (0.35)<br/>
+Stake 100 → Payout: <span style="color:#fcd34d">153.85</span> units<br/>
+🔔 Result Notification
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── COLUMN 2: Backend ── -->
+  <div class="col">
+    <div class="col-header orange">🟠 Backend (Node.js + Express)</div>
+
+    <div class="box dark">
+      <div class="box-title"><span class="icon">🔑</span>JWT Auth Middleware</div>
+      <ul>
+        <li>Verify Access Token ทุก Request</li>
+        <li>Role Guard: <code>requireUser</code> / <code>requireAdmin</code></li>
+        <li>Refresh Token Rotation</li>
+        <li>Token Blacklist (Logout)</li>
+      </ul>
+    </div>
+
+    <div class="box orange">
+      <div class="box-title"><span class="icon">💰</span>Bet Placement (MongoDB Transaction)</div>
+      <ul>
+        <li>1. ตรวจ Market status === <code>'open'</code></li>
+        <li>2. Atomic balance deduct (Concurrency-safe)</li>
+        <li>3. บันทึก Bet record</li>
+        <li>4. อัปเดต totalYes / totalNo / totalPool</li>
+        <li>5. บันทึก Transaction log</li>
+        <li>6. Commit → Broadcast Odds via Socket</li>
+      </ul>
+    </div>
+
+    <div class="box dark">
+      <div class="box-title"><span class="icon">📐</span>AMM Odds Engine</div>
+      <div class="formula">
+<span class="comment">// Automated Market Maker</span><br/>
+priceYes = totalYes / totalPool<br/>
+priceNo  = totalNo  / totalPool<br/>
+<br/>
+<span class="comment">// Payout (ราคาตอนที่ Bet)</span><br/>
+payout = stake / priceAtBet<br/>
+<br/>
+<span class="comment">// ตัวอย่าง: 100 / 0.65 = 153.85</span>
+      </div>
+    </div>
+
+    <div class="box purple">
+      <div class="box-title"><span class="icon">👤</span>Admin Controls</div>
+      <ul>
+        <li>POST /markets — สร้าง Market ใหม่</li>
+        <li>PATCH /close — ปิดรับ Bet</li>
+        <li>PATCH /resolve — ประกาศผล Yes/No → แจก Winnings (Atomic)</li>
+        <li>PATCH /cancel — ยกเลิก → Refund ทั้งหมด</li>
+        <li>Broadcast Result ผ่าน Socket.io</li>
+      </ul>
+    </div>
+
+    <div class="box red">
+      <div class="box-title"><span class="icon">⚠️</span>Error Handling</div>
+      <ul>
+        <li><strong>INSUFFICIENT_BALANCE</strong> → 400 Bad Request</li>
+        <li><strong>MARKET_NOT_OPEN</strong> → 400 Bad Request</li>
+        <li><strong>Race Condition</strong> → <code>findOneAndUpdate</code> atomic</li>
+        <li><strong>JWT Expired</strong> → 401 → Frontend refresh</li>
+        <li><strong>Socket Disconnect</strong> → Auto Reconnect</li>
+        <li><strong>Cancel Market</strong> → Auto Refund All</li>
+      </ul>
+    </div>
+
+    <div class="box dark">
+      <div class="box-title"><span class="icon">🔌</span>Socket.io Server</div>
+      <ul>
+        <li><code>join:market</code> → Join Room</li>
+        <li>Emit <code>odds:update</code> → Room Members</li>
+        <li>Emit <code>market:resolved</code> → All in Room</li>
+        <li>Emit <code>balance:update</code> → User Socket</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ── COLUMN 3: Database ── -->
+  <div class="col">
+    <div class="col-header green">🗄️ Database (MongoDB)</div>
+
+    <div class="db-item">
+      <div class="db-name">👥 users</div>
+      <div class="db-fields">
+        _id, username, email<br/>
+        passwordHash, balance<br/>
+        role: <span style="color:#6ee7b7">"user"</span> | <span style="color:#fcd34d">"admin"</span><br/>
+        createdAt, updatedAt
+      </div>
+    </div>
+
+    <div class="db-item">
+      <div class="db-name">🏪 markets</div>
+      <div class="db-fields">
+        _id, title, description, category<br/>
+        totalYes, totalNo, totalPool<br/>
+        status: <span class="chip open">open</span><span class="chip closed">closed</span><span class="chip resolved">resolved</span><span class="chip cancelled">cancelled</span><br/>
+        result: "yes" | "no" | null<br/>
+        closingDate, resolvedAt, createdBy
+      </div>
+    </div>
+
+    <div class="db-item">
+      <div class="db-name">🎯 bets</div>
+      <div class="db-fields">
+        _id, userId (ref), marketId (ref)<br/>
+        side: "yes" | "no"<br/>
+        stake, priceAtBet<br/>
+        potentialPayout, actualPayout<br/>
+        status: <span class="chip pending">pending</span><span class="chip won">won</span><span class="chip lost">lost</span><span class="chip refunded">refunded</span>
+      </div>
+    </div>
+
+    <div class="db-item">
+      <div class="db-name">💳 transactions</div>
+      <div class="db-fields">
+        _id, userId (ref)<br/>
+        type: "bet" | "win" | "refund" | "deposit"<br/>
+        amount, balanceBefore, balanceAfter<br/>
+        referenceId (betId | marketId)<br/>
+        description, createdAt
+      </div>
+    </div>
+
+    <div class="db-item">
+      <div class="db-name">🔒 sessions</div>
+      <div class="db-fields">
+        _id, jti (JWT ID)<br/>
+        userId (ref), reason<br/>
+        expiresAt (TTL Index)<br/>
+        <span style="color:#8b949e">← JWT Blacklist for Logout</span>
+      </div>
+    </div>
+
+    <div class="box green" style="margin-top:4px;">
+      <div class="box-title"><span class="icon">⚡</span>Atomic Operations</div>
+      <ul>
+        <li>MongoDB Sessions (Multi-doc Transactions)</li>
+        <li><code>findOneAndUpdate</code> ป้องกัน Race Condition</li>
+        <li>TTL Index บน sessions collection</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DATA FLOW ARROWS ═══ -->
+<div class="arrows-row">
+  <div class="arrow-box">
+    <div class="arrow-label">⟵ REST API + JWT Header ⟶</div>
+    <div class="arrow-desc">Frontend ↔ Backend via HTTP<br/>Authorization: Bearer &lt;token&gt;</div>
+  </div>
+  <div class="arrow-box">
+    <div class="arrow-label">⚡ WebSocket (Socket.io) ⚡</div>
+    <div class="arrow-desc">Bidirectional Real-time<br/>odds:update · market:resolved · balance:update</div>
+  </div>
+  <div class="arrow-box">
+    <div class="arrow-label">⟶ Mongoose ODM ⟶</div>
+    <div class="arrow-desc">Backend → MongoDB<br/>Atomic Transactions · Session Support</div>
+  </div>
+</div>
+
+<!-- ═══ LIFECYCLE STATE MACHINE ═══ -->
+<div class="lifecycle">
+  <h2>🔄 Market Lifecycle (State Machine)</h2>
+  <div class="states">
+    <div class="state-node open">🟢 OPEN<br/><small>รับ Bet ได้</small></div>
+    <div class="state-arrow"><span class="arr">→</span><span>Admin ปิด</span></div>
+    <div class="state-node closed">🟡 CLOSED<br/><small>หยุดรับ Bet</small></div>
+    <div class="state-arrow"><span class="arr">→</span><span>Admin ตัดสิน</span></div>
+    <div class="state-fork">
+      <div class="state-fork-item">
+        <div class="state-node resolved">🔵 RESOLVED<br/><small>แจก Winnings</small></div>
+        <div class="fork-label">Yes/No ชนะ → actualPayout = stake / priceAtBet</div>
+      </div>
+      <div class="state-fork-item">
+        <div class="state-node cancelled">🔴 CANCELLED<br/><small>Refund ทั้งหมด</small></div>
+        <div class="fork-label">ทุกคนได้ stake คืน 100%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONCURRENCY FIX ═══ -->
+<div class="concurrency">
+  <div class="code-block">
+    <h3>❌ วิธีเก่า (มี Race Condition)</h3>
+    <span class="code-comment">// ❌ อันตราย! ถ้า 2 Request มาพร้อมกัน</span><br/>
+    <span class="code-keyword">const</span> <span class="code-var">user</span> = <span class="code-keyword">await</span> User.<span class="code-fn">findById</span>(userId);<br/>
+    <span class="code-keyword">if</span> (user.balance &lt; stake) <span class="code-keyword">throw</span> error;<br/>
+    user.balance -= stake; <span class="code-comment">// ← อ่านค่าเก่า!</span><br/>
+    <span class="code-keyword">await</span> user.<span class="code-fn">save</span>(); <span class="code-comment">// ← อาจ overwrite กัน</span>
+  </div>
+  <div class="code-block">
+    <h3>✅ วิธีใหม่ (Atomic — ปลอดภัย 100%)</h3>
+    <span class="code-comment">// ✅ findOneAndUpdate atomic</span><br/>
+    <span class="code-keyword">const</span> <span class="code-var">updated</span> = <span class="code-keyword">await</span> User.<span class="code-fn">findOneAndUpdate</span>(<br/>
+    &nbsp;&nbsp;{ _id: userId, balance: { <span class="code-string">$gte</span>: stake } },<br/>
+    &nbsp;&nbsp;{ <span class="code-string">$inc</span>: { balance: -stake } },<br/>
+    &nbsp;&nbsp;{ session, <span class="code-string">new</span>: <span class="code-keyword">true</span> }<br/>
+    );<br/>
+    <span class="code-keyword">if</span> (!updated) <span class="code-keyword">throw new</span> <span class="code-fn">Error</span>(<span class="code-string">'INSUFFICIENT_BALANCE'</span>);
+  </div>
+</div>
+
+<footer>
+  TCLMarket2 Architecture v2.0 · Inspired by <a href="https://polymarket.com" target="_blank">Polymarket</a> · Updated 20 Feb 2026
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+.admin-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.admin-header {
+    margin-bottom: 1.5rem;
+}
+
+.admin-header h1 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+}
+
+.admin-header p {
+    color: #6b6b8a;
+}
+
+/* ── Tabs ── */
+.admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.admin-tab {
+    padding: 0.6rem 1.25rem;
+    background: #12122a;
+    border: 1px solid #2a2a4a;
+    border-radius: 8px;
+    color: #a0a0c0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.admin-tab.active,
+.admin-tab:hover {
+    background: #7c3aed;
+    color: #fff;
+    border-color: #7c3aed;
+}
+
+/* ── Message ── */
+.admin-msg {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.admin-msg.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid #10b981;
+}
+
+.admin-msg.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+/* ── Create Form ── */
+.admin-card {
+    background: #12122a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 1.75rem;
+}
+
+.admin-card h2 {
+    color: #fff;
+    margin-bottom: 1.25rem;
+    font-size: 1.1rem;
+}
+
+.create-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-group label {
+    color: #a0a0c0;
+    font-size: 0.85rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-input {
+    background: #0f0f1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 8px;
+    color: #e0e0ff;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.admin-input:focus {
+    outline: none;
+    border-color: #7c3aed;
+}
+
+.admin-textarea {
+    resize: vertical;
+}
+
+.admin-btn-primary {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    align-self: flex-start;
+}
+
+.admin-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-btn-primary:not(:disabled):hover {
+    opacity: 0.9;
+}
+
+/* ── Markets List ── */
+.admin-markets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.admin-market-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: #12122a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: border-color 0.2s;
+}
+
+.admin-market-row:hover {
+    border-color: #3a3a5a;
+}
+
+.admin-market-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-market-top {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.4rem;
+}
+
+.admin-category {
+    font-size: 0.75rem;
+    background: #1e1e3a;
+    color: #a0a0c0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 10px;
+}
+
+.admin-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.admin-market-title {
+    color: #e0e0ff;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-market-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #6b6b8a;
+    flex-wrap: wrap;
+}
+
+.result-chip {
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.result-chip.yes {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+
+.result-chip.no {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+/* Buttons */
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.admin-btn {
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-size: 0.8rem;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.admin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-btn-warn {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+.admin-btn-warn:hover {
+    background: rgba(245, 158, 11, 0.25);
+}
+
+.admin-btn-secondary {
+    background: rgba(99, 102, 241, 0.1);
+    color: #818cf8;
+    border-color: #818cf8;
+}
+
+.admin-btn-secondary:hover {
+    background: rgba(99, 102, 241, 0.25);
+}
+
+.admin-btn-yes {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-color: #10b981;
+}
+
+.admin-btn-yes:not(:disabled):hover {
+    background: rgba(16, 185, 129, 0.25);
+}
+
+.admin-btn-no {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+.admin-btn-no:not(:disabled):hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+.admin-btn-danger {
+    background: rgba(239, 68, 68, 0.05);
+    color: #9ca3af;
+    border-color: #374151;
+}
+
+.admin-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.admin-btn-done {
+    color: #4a4a6a;
+    font-size: 0.8rem;
+    padding: 0.45rem 0.9rem;
+    text-align: center;
+}
+
+.admin-loading {
+    text-align: center;
+    padding: 3rem;
+    color: #6b6b8a;
+}

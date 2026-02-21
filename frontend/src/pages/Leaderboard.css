@@ -1,0 +1,293 @@
+.lb-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+}
+
+/* ── Header ── */
+.lb-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.lb-header h1 {
+    font-size: 2rem;
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+}
+
+.lb-header p {
+    color: #6b6b8a;
+    margin-bottom: 1rem;
+}
+
+.my-rank-badge {
+    display: inline-block;
+    background: rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    color: #a78bfa;
+    padding: 0.4rem 1.2rem;
+    border-radius: 99px;
+    font-size: 0.88rem;
+}
+
+.my-rank-badge strong {
+    color: #fff;
+}
+
+/* ── Podium ── */
+.podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.podium-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 1;
+    max-width: 180px;
+}
+
+.podium-crown {
+    font-size: 1.5rem;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.podium-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.gold .podium-avatar {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    width: 68px;
+    height: 68px;
+    font-size: 1.7rem;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+.silver .podium-avatar {
+    background: linear-gradient(135deg, #94a3b8, #64748b);
+    box-shadow: 0 0 12px rgba(148, 163, 184, 0.3);
+}
+
+.bronze .podium-avatar {
+    background: linear-gradient(135deg, #b45309, #92400e);
+    box-shadow: 0 0 12px rgba(180, 83, 9, 0.3);
+}
+
+.podium-name {
+    color: #e0e0ff;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.podium-balance {
+    color: #a0a0c0;
+    font-size: 0.8rem;
+}
+
+.podium-base {
+    width: 100%;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    padding: 0.6rem 0.5rem 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+
+.podium-base-1 {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.1));
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #f59e0b;
+    height: 80px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0.5rem;
+}
+
+.podium-base-2 {
+    background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), rgba(148, 163, 184, 0.05));
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+    height: 60px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0.5rem;
+}
+
+.podium-base-3 {
+    background: linear-gradient(135deg, rgba(180, 83, 9, 0.2), rgba(180, 83, 9, 0.05));
+    border: 1px solid rgba(180, 83, 9, 0.2);
+    color: #b45309;
+    height: 44px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0.4rem;
+}
+
+/* ── Table ── */
+.lb-table-wrap {
+    background: var(--bg-card, #1e1e38);
+    border: 1px solid #32325a;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.lb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.lb-table thead th {
+    background: #18183a;
+    color: #8888aa;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #32325a;
+}
+
+.lb-table tbody tr {
+    border-bottom: 1px solid #1e1e38;
+    transition: background 0.15s;
+}
+
+.lb-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.lb-table tbody tr:hover {
+    background: rgba(124, 58, 237, 0.05);
+}
+
+.lb-table tbody tr.lb-me {
+    background: rgba(124, 58, 237, 0.08);
+    border-left: 3px solid #7c3aed;
+}
+
+.lb-table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.lb-rank {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    min-width: 50px;
+}
+
+.lb-user {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lb-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.lb-username {
+    color: #e0e0ff;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.lb-you {
+    background: rgba(124, 58, 237, 0.2);
+    color: #a78bfa;
+    font-size: 0.68rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 99px;
+    font-weight: 700;
+}
+
+.lb-admin-tag {
+    font-size: 0.68rem;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.lb-balance {
+    color: #f59e0b;
+    font-weight: 700;
+}
+
+.lb-num {
+    color: #a0a0c0;
+    text-align: center;
+}
+
+.lb-winrate {
+    font-weight: 700;
+}
+
+.lb-loading {
+    text-align: center;
+    padding: 4rem;
+    color: #6b6b8a;
+}
+
+@media (max-width: 640px) {
+    .podium {
+        gap: 0.5rem;
+    }
+
+    .lb-table {
+        font-size: 0.8rem;
+    }
+
+    .lb-table thead th,
+    .lb-table td {
+        padding: 0.7rem 0.6rem;
+    }
+}

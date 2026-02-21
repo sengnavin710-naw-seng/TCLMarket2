@@ -1,0 +1,169 @@
+.markets-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.markets-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.markets-header h1 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 0.4rem;
+}
+
+.markets-header p {
+    color: #6b6b8a;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.filter-tab {
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    border: 1px solid #2a2a4a;
+    background: transparent;
+    color: #a0a0c0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.filter-tab.active,
+.filter-tab:hover {
+    background: #7c3aed;
+    color: #fff;
+    border-color: #7c3aed;
+}
+
+.markets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.market-card {
+    display: block;
+    text-decoration: none;
+    background: #12122a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.market-card:hover {
+    transform: translateY(-3px);
+    border-color: #7c3aed;
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.category-badge {
+    font-size: 0.75rem;
+    background: #1e1e3a;
+    color: #a0a0c0;
+    padding: 0.2rem 0.6rem;
+    border-radius: 10px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.card-title {
+    color: #e0e0ff;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    min-height: 2.8em;
+}
+
+.odds-bar-wrap {
+    margin-bottom: 0.75rem;
+}
+
+.odds-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #1e1e3a;
+    margin-bottom: 0.4rem;
+}
+
+.odds-yes {
+    background: #10b981;
+    transition: width 0.5s;
+}
+
+.odds-no {
+    background: #ef4444;
+    transition: width 0.5s;
+}
+
+.odds-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+}
+
+.yes-label {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.no-label {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.card-bottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #6b6b8a;
+    margin-top: 0.75rem;
+}
+
+.result-badge {
+    margin-top: 0.75rem;
+    text-align: center;
+    padding: 0.4rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.result-badge.yes {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+
+.result-badge.no {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.loading,
+.empty {
+    text-align: center;
+    color: #6b6b8a;
+    padding: 4rem;
+    font-size: 1.1rem;
+}
