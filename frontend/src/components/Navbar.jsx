@@ -2,21 +2,24 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
+const TAB_PATHS = ['/', '/leaderboard', '/markets'];
+
 const Navbar = () => {
-    const { user, profile, logout } = useAuth();
+    const { user, profile } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-
-    const handleLogout = async () => {
-        await logout();
-        navigate('/');
-    };
+    const showBack = !TAB_PATHS.includes(location.pathname);
 
     const initials = profile?.username ? profile.username[0].toUpperCase() : '?';
 
     return (
         <nav className="navbar">
-            {/* Brand */}
+            {/* Back button OR Brand */}
+            {showBack ? (
+                <button className="navbar-back" onClick={() => navigate(-1)} aria-label="Go back">
+                    ← Back
+                </button>
+            ) : null}
             <Link to="/" className="navbar-brand">TCL</Link>
 
             {/* Right side */}

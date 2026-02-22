@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './Markets.css';
@@ -7,6 +7,7 @@ const Markets = () => {
     const [markets, setMarkets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('open');
+    const [query, setQuery] = useState('');
 
     useEffect(() => {
         const fetchMarkets = async () => {
@@ -29,6 +30,17 @@ const Markets = () => {
         return () => supabase.removeChannel(channel);
     }, [filter]);
 
+    // Client-side search filter
+    const filtered = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return markets;
+        return markets.filter(m =>
+            m.title?.toLowerCase().includes(q) ||
+            m.category?.toLowerCase().includes(q) ||
+            m.description?.toLowerCase().includes(q)
+        );
+    }, [markets, query]);
+
     const formatDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     const yesPercent = (m) => {
@@ -47,25 +59,53 @@ const Markets = () => {
                 <p>Bet on real-world outcomes with virtual points</p>
             </div>
 
+            {/* ── Search bar ── */}
+            <div className="markets-search-wrap">
+                <span className="search-icon">🔍</span>
+                <input
+                    type="text"
+                    className="markets-search"
+                    placeholder="Search markets by title, category..."
+                    value={query}
+                    onChange={e => setQuery(e.target.value)}
+                    aria-label="Search markets"
+                />
+                {query && (
+                    <button className="search-clear" onClick={() => setQuery('')} aria-label="Clear search">×</button>
+                )}
+            </div>
+
+            {/* ── Status filter tabs ── */}
             <div className="filter-tabs">
                 {['open', 'closed', 'resolved'].map(s => (
                     <button
                         key={s}
                         className={`filter-tab ${filter === s ? 'active' : ''}`}
-                        onClick={() => setFilter(s)}
+                        onClick={() => { setFilter(s); setQuery(''); }}
                     >
                         {s.charAt(0).toUpperCase() + s.slice(1)}
                     </button>
                 ))}
             </div>
 
+            {/* ── Results count ── */}
+            {query && !loading && (
+                <p className="search-result-count">
+                    {filtered.length === 0
+                        ? `No results for "${query}"`
+                        : `${filtered.length} result${filtered.length !== 1 ? 's' : ''} for "${query}"`}
+                </p>
+            )}
+
             {loading ? (
                 <div className="loading">Loading markets...</div>
-            ) : markets.length === 0 ? (
+            ) : filtered.length === 0 && !query ? (
                 <div className="empty">No {filter} markets yet.</div>
+            ) : filtered.length === 0 ? (
+                <div className="empty">No markets match your search.</div>
             ) : (
                 <div className="markets-grid">
-                    {markets.map(m => {
+                    {filtered.map(m => {
                         const yes = yesPercent(m);
                         return (
                             <Link to={`/markets/${m.id}`} key={m.id} className="market-card">
@@ -75,7 +115,9 @@ const Markets = () => {
                                         <span className="category-badge">{m.category}</span>
                                         <span className="status-dot" style={{ background: statusColor[m.status] }} />
                                     </div>
-                                    <h3 className="card-title">{m.title}</h3>
+                                    <h3 className="card-title">
+                                        {query ? <Highlight text={m.title} query={query} /> : m.title}
+                                    </h3>
                                     <div className="card-bottom">
                                         <span>💰 {Number(m.total_pool ?? 0).toFixed(0)} pts</span>
                                         <span>📅 {formatDate(m.closing_date)}</span>
@@ -102,6 +144,20 @@ const Markets = () => {
                 </div>
             )}
         </div>
+    );
+};
+
+/* Highlight matching text */
+const Highlight = ({ text, query }) => {
+    if (!query || !text) return text;
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
+    return (
+        <>
+            {text.slice(0, idx)}
+            <mark className="search-highlight">{text.slice(idx, idx + query.length)}</mark>
+            {text.slice(idx + query.length)}
+        </>
     );
 };
 

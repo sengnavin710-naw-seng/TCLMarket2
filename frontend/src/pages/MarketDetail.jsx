@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import Modal from '../components/Modal';
 import './MarketDetail.css';
 
 const OddsBar = ({ yes, no, pool }) => {
@@ -10,12 +12,12 @@ const OddsBar = ({ yes, no, pool }) => {
     return (
         <div className="detail-odds">
             <div className="detail-odds-bar">
-                <div style={{ width: `${yPct}%`, background: '#10b981', height: '100%', borderRadius: '4px 0 0 4px', transition: 'width 0.5s' }} />
-                <div style={{ width: `${nPct}%`, background: '#ef4444', height: '100%', borderRadius: '0 4px 4px 0', transition: 'width 0.5s' }} />
+                <div style={{ width: `${yPct}%`, background: 'var(--yes)', height: '100%', borderRadius: '4px 0 0 4px', transition: 'width 0.5s' }} />
+                <div style={{ width: `${nPct}%`, background: 'var(--no)', height: '100%', borderRadius: '0 4px 4px 0', transition: 'width 0.5s' }} />
             </div>
             <div className="detail-odds-labels">
-                <span style={{ color: '#10b981', fontWeight: 700, fontSize: '1.1rem' }}>YES {yPct}%</span>
-                <span style={{ color: '#ef4444', fontWeight: 700, fontSize: '1.1rem' }}>NO {nPct}%</span>
+                <span style={{ color: 'var(--yes)', fontWeight: 800, fontSize: '1.2rem' }}>YES {yPct}%</span>
+                <span style={{ color: 'var(--no)', fontWeight: 800, fontSize: '1.2rem' }}>NO {nPct}%</span>
             </div>
         </div>
     );
@@ -25,13 +27,14 @@ const MarketDetail = () => {
     const { id } = useParams();
     const { user, profile, refreshProfile } = useAuth();
     const navigate = useNavigate();
+    const toast = useToast();
 
     const [market, setMarket] = useState(null);
     const [loading, setLoading] = useState(true);
     const [side, setSide] = useState('yes');
     const [stake, setStake] = useState('');
     const [betting, setBetting] = useState(false);
-    const [message, setMessage] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [myBets, setMyBets] = useState([]);
 
     const fetchMarket = async () => {
@@ -66,37 +69,39 @@ const MarketDetail = () => {
         return (Number(stake) / price).toFixed(2);
     };
 
-    const handleBet = async () => {
+    const handleBet = () => {
         if (!user) return navigate('/login');
         if (!stake || isNaN(stake) || Number(stake) <= 0) {
-            setMessage({ type: 'error', text: 'Enter a valid stake amount' });
+            toast.error('Enter a valid stake amount');
             return;
         }
         if (Number(stake) > Number(profile?.balance)) {
-            setMessage({ type: 'error', text: 'Insufficient balance' });
+            toast.error('Insufficient balance 💸');
             return;
         }
+        setIsModalOpen(true);
+    };
+
+    const confirmBet = async () => {
+        setIsModalOpen(false);
         setBetting(true);
-        setMessage(null);
         try {
-            // Call RPC directly with user's session token so auth.uid() works
-            const { data, error } = await supabase.rpc('place_bet', {
+            const { error } = await supabase.rpc('place_bet', {
                 p_market_id: id,
                 p_side: side,
                 p_stake: Number(stake)
             });
             if (error) throw error;
-            setMessage({ type: 'success', text: `✅ Bet placed! ${stake} pts on ${side.toUpperCase()}` });
+            toast.success(`Bet placed! ${stake} pts on ${side.toUpperCase()} 🎯`);
             setStake('');
             fetchMarket();
             fetchMyBets();
-            // Refresh balance in Navbar
             refreshProfile();
         } catch (err) {
             const msg = err.message || 'Failed to place bet';
-            if (msg.includes('INSUFFICIENT_BALANCE')) setMessage({ type: 'error', text: 'Insufficient balance' });
-            else if (msg.includes('MARKET_NOT_OPEN')) setMessage({ type: 'error', text: 'Market is not open' });
-            else setMessage({ type: 'error', text: msg });
+            if (msg.includes('INSUFFICIENT_BALANCE')) toast.error('Insufficient balance 💸');
+            else if (msg.includes('MARKET_NOT_OPEN')) toast.error('Market is no longer open');
+            else toast.error(msg);
         } finally {
             setBetting(false);
         }
@@ -196,10 +201,6 @@ const MarketDetail = () => {
                                 </div>
                             )}
 
-                            {/* Message */}
-                            {message && (
-                                <div className={`bet-message ${message.type}`}>{message.text}</div>
-                            )}
 
                             <button onClick={handleBet} disabled={betting} className="bet-submit">
                                 {betting ? 'Placing bet...' : `Bet ${stake || '?'} pts on ${side.toUpperCase()}`}
@@ -214,6 +215,41 @@ const MarketDetail = () => {
                     )}
                 </div>
             </div>
+
+            {/* 🎭 Bet Confirmation Modal */}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Confirm Your Bet"
+                footer={(
+                    <>
+                        <button className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                        <button className={`btn-confirm ${side}`} onClick={confirmBet}>Confirm Bet</button>
+                    </>
+                )}
+            >
+                <div className="confirm-modal-body">
+                    <p className="confirm-q">Are you sure you want to bet on this market?</p>
+                    <div className="confirm-details">
+                        <div className="confirm-item">
+                            <span>Market</span>
+                            <strong>{market.title}</strong>
+                        </div>
+                        <div className="confirm-item">
+                            <span>Prediction</span>
+                            <strong className={`side-text ${side}`}>{side.toUpperCase()}</strong>
+                        </div>
+                        <div className="confirm-item">
+                            <span>Stake</span>
+                            <strong>💰 {Number(stake).toLocaleString()} pts</strong>
+                        </div>
+                        <div className="confirm-item">
+                            <span>Potential Payout</span>
+                            <strong className="payout-text">🎯 {calcPayout()} pts</strong>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };
