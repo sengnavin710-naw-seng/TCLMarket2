@@ -109,7 +109,18 @@ const Markets = () => {
                         const yes = yesPercent(m);
                         return (
                             <Link to={`/markets/${m.id}`} key={m.id} className="market-card">
-                                {/* Left: info */}
+                                {/* Left: Image */}
+                                <div className="card-image">
+                                    {m.image_url ? (
+                                        <img src={m.image_url} alt="" className="market-img" />
+                                    ) : (
+                                        <div className="market-img-fallback">
+                                            {m.title?.[0]?.toUpperCase() ?? '?'}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Center: info */}
                                 <div className="card-info">
                                     <div className="card-top">
                                         <span className="category-badge">{m.category}</span>

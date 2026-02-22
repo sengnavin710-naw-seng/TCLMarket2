@@ -120,15 +120,23 @@ const MarketDetail = () => {
 
                 {/* Left: Market Info + Chart */}
                 <div className="detail-main">
-                    <div className="detail-meta">
-                        <span className="detail-category">{market.category}</span>
-                        <span className="detail-status" style={{ color: statusColors[market.status] }}>
-                            ● {market.status.toUpperCase()}
-                        </span>
+                    <div className="detail-header-row">
+                        {market.image_url && (
+                            <div className="detail-image-box">
+                                <img src={market.image_url} alt="" className="detail-img-large" />
+                            </div>
+                        )}
+                        <div className="detail-header-content">
+                            <div className="detail-meta">
+                                <span className="detail-category">{market.category}</span>
+                                <span className="detail-status" style={{ color: statusColors[market.status] }}>
+                                    ● {market.status.toUpperCase()}
+                                </span>
+                            </div>
+                            <h1 className="detail-title">{market.title}</h1>
+                            <p className="detail-desc">{market.description}</p>
+                        </div>
                     </div>
-
-                    <h1 className="detail-title">{market.title}</h1>
-                    <p className="detail-desc">{market.description}</p>
 
                     <OddsBar yes={market.total_yes} no={market.total_no} pool={market.total_pool} />
 

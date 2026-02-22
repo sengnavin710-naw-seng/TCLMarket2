@@ -38,7 +38,13 @@ const Navbar = () => {
                         )}
 
                         <Link to="/profile" className="avatar-link" title="My Profile">
-                            <span className="avatar-initials">{initials}</span>
+                            <div className="navbar-avatar">
+                                {profile?.avatar_url ? (
+                                    <img src={profile.avatar_url} alt="Avatar" className="navbar-avatar-img" />
+                                ) : (
+                                    <span className="avatar-initials">{initials}</span>
+                                )}
+                            </div>
                         </Link>
                     </>
                 ) : (

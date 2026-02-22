@@ -132,6 +132,32 @@
     gap: 0.65rem;
 }
 
+/* Card image */
+.card-image {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border-lt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.market-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.market-img-fallback {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
 /* Market card — Polymarket row style */
 .market-card {
     display: flex;

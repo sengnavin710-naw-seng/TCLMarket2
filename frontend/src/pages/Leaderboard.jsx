@@ -19,7 +19,7 @@ const Leaderboard = () => {
         // Fetch all users sorted by balance
         const { data: users } = await supabase
             .from('users')
-            .select('id, username, balance, role, created_at')
+            .select('id, username, balance, role, created_at, avatar_url')
             .order('balance', { ascending: false });
 
         if (!users) { setLoading(false); return; }
@@ -78,7 +78,13 @@ const Leaderboard = () => {
                         <div className="podium">
                             {/* 2nd */}
                             <div className="podium-slot silver">
-                                <div className="podium-avatar">{players[1].username[0].toUpperCase()}</div>
+                                <div className="podium-avatar">
+                                    {players[1].avatar_url ? (
+                                        <img src={players[1].avatar_url} alt="" className="podium-img" />
+                                    ) : (
+                                        players[1].username[0].toUpperCase()
+                                    )}
+                                </div>
                                 <div className="podium-name">{players[1].username}</div>
                                 <div className="podium-balance">{Number(players[1].balance).toLocaleString()} pts</div>
                                 <div className="podium-base podium-base-2">🥈 2nd</div>
@@ -86,7 +92,13 @@ const Leaderboard = () => {
                             {/* 1st */}
                             <div className="podium-slot gold">
                                 <div className="podium-crown">👑</div>
-                                <div className="podium-avatar">{players[0].username[0].toUpperCase()}</div>
+                                <div className="podium-avatar">
+                                    {players[0].avatar_url ? (
+                                        <img src={players[0].avatar_url} alt="" className="podium-img" />
+                                    ) : (
+                                        players[0].username[0].toUpperCase()
+                                    )}
+                                </div>
                                 <div className="podium-name">{players[0].username}</div>
                                 <div className="podium-balance">{Number(players[0].balance).toLocaleString()} pts</div>
                                 <div className="podium-base podium-base-1">🥇 1st</div>
@@ -94,7 +106,13 @@ const Leaderboard = () => {
                             {/* 3rd */}
                             {players[2] && (
                                 <div className="podium-slot bronze">
-                                    <div className="podium-avatar">{players[2].username[0].toUpperCase()}</div>
+                                    <div className="podium-avatar">
+                                        {players[2].avatar_url ? (
+                                            <img src={players[2].avatar_url} alt="" className="podium-img" />
+                                        ) : (
+                                            players[2].username[0].toUpperCase()
+                                        )}
+                                    </div>
                                     <div className="podium-name">{players[2].username}</div>
                                     <div className="podium-balance">{Number(players[2].balance).toLocaleString()} pts</div>
                                     <div className="podium-base podium-base-3">🥉 3rd</div>
@@ -122,7 +140,13 @@ const Leaderboard = () => {
                                     <tr key={p.id} className={user && p.id === user.id ? 'lb-me' : ''}>
                                         <td className="lb-rank">{medal(p.rank)}</td>
                                         <td className="lb-user">
-                                            <div className="lb-avatar">{p.username[0].toUpperCase()}</div>
+                                            <div className="lb-avatar">
+                                                {p.avatar_url ? (
+                                                    <img src={p.avatar_url} alt="" className="lb-avatar-img" />
+                                                ) : (
+                                                    p.username[0].toUpperCase()
+                                                )}
+                                            </div>
                                             <div>
                                                 <div className="lb-username">
                                                     {p.username}

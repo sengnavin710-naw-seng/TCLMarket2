@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import './Profile.css';
 
 const StatCard = ({ icon, label, value, color }) => (
@@ -15,8 +16,10 @@ const StatCard = ({ icon, label, value, color }) => (
 );
 
 const Profile = () => {
-    const { user, profile, logout } = useAuth();
+    const { user, profile, logout, refreshProfile } = useAuth();
     const navigate = useNavigate();
+    const toast = useToast();
+    const fileInputRef = useRef(null);
 
     const handleLogout = async () => {
         await logout();
@@ -28,6 +31,54 @@ const Profile = () => {
     const [markets, setMarkets] = useState({});
     const [tab, setTab] = useState('bets');
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
+
+    const handleAvatarUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validation
+        if (!file.type.startsWith('image/')) {
+            return toast.error('Please upload an image file');
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            return toast.error('Image size must be less than 2MB');
+        }
+
+        setUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            // 1. Upload to Storage
+            const { error: uploadError } = await supabase.storage
+                .from('avatars')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            // 2. Get Public URL
+            const { data: { publicUrl } } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(filePath);
+
+            // 3. Update Profile in DB
+            const { error: updateError } = await supabase
+                .from('users')
+                .update({ avatar_url: publicUrl })
+                .eq('id', user.id);
+
+            if (updateError) throw updateError;
+
+            toast.success('Profile picture updated! ✨');
+            refreshProfile();
+        } catch (err) {
+            toast.error(err.message || 'Failed to upload image');
+        } finally {
+            setUploading(false);
+        }
+    };
 
     useEffect(() => {
         if (!user) { navigate('/login'); return; }
@@ -79,9 +130,28 @@ const Profile = () => {
 
             {/* Header Card */}
             <div className="profile-header">
-                <div className="profile-avatar">
-                    {profile.username?.[0]?.toUpperCase() ?? '?'}
+                <div
+                    className={`profile-avatar-container ${uploading ? 'uploading' : ''}`}
+                    onClick={() => fileInputRef.current.click()}
+                >
+                    {profile.avatar_url ? (
+                        <img src={profile.avatar_url} alt="Profile" className="profile-img" />
+                    ) : (
+                        <div className="profile-initials">
+                            {profile.username?.[0]?.toUpperCase() ?? '?'}
+                        </div>
+                    )}
+                    <div className="avatar-overlay">
+                        <span>{uploading ? '⌛' : '📸'}</span>
+                    </div>
                 </div>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleAvatarUpload}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                />
                 <div className="profile-info">
                     <h1>{profile.username}</h1>
                     <span className="profile-role">{profile.role === 'admin' ? '🛡️ Admin' : '👤 Member'}</span>
