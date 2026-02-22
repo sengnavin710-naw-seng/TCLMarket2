@@ -1,162 +1,140 @@
+/* ── Navbar ── */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.75rem;
-  height: 60px;
-  background: rgba(22, 22, 40, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(124, 58, 237, 0.18);
-  position: sticky;
-  top: 0;
-  z-index: 200;
+  padding: 0 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
-/* ── Brand ── */
+/* Brand */
 .navbar-brand {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-decoration: none;
-  background: linear-gradient(135deg, #a78bfa, #818cf8);
+  background: linear-gradient(135deg, var(--accent), #818cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   flex-shrink: 0;
 }
 
-/* ── Right side ── */
+/* Right group */
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 0.6rem;
 }
 
-/* ── Balance Chip ── */
+/* Balance chip */
 .balance-chip {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.28);
-  padding: 0.35rem 0.85rem;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid #ddd6fe;
   border-radius: 99px;
+  padding: 0.32rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .balance-icon {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .balance-amt {
-  color: #10b981;
-  font-weight: 800;
-  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .balance-unit {
-  color: #4a9a7a;
-  font-size: 0.75rem;
   font-weight: 500;
+  color: var(--accent-lt);
+  font-size: 0.78rem;
 }
 
-/* ── Avatar ── */
+/* Admin pill */
+.admin-pill {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  padding: 0.3rem 0.8rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.admin-pill:hover {
+  background: #fde68a;
+}
+
+/* Avatar */
 .avatar-link {
   text-decoration: none;
-  border-radius: 50%;
-  display: flex;
-  transition: transform 0.18s, box-shadow 0.18s;
-}
-
-.avatar-link:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.4);
-  border-radius: 50%;
 }
 
 .avatar-initials {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  background: linear-gradient(135deg, var(--accent), #818cf8);
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(124, 58, 237, 0.45);
-}
-
-/* ── Admin Pill ── */
-.admin-pill {
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #f59e0b;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.3rem 0.75rem;
-  border-radius: 99px;
-  text-decoration: none;
-  transition: background 0.18s;
-}
-
-.admin-pill:hover {
-  background: rgba(245, 158, 11, 0.2);
-}
-
-/* ── Logout ── */
-.btn-logout {
-  background: transparent;
-  border: 1px solid #3a3a5a;
-  color: #6060808a;
-  color: #7072a0;
-  padding: 0.35rem 0.85rem;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.83rem;
-  font-weight: 600;
-  font-family: inherit;
-  transition: all 0.18s;
+  box-shadow: 0 2px 8px rgba(109, 40, 217, .3);
+  transition: transform 0.15s;
 }
 
-.btn-logout:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #f87171;
+.avatar-initials:hover {
+  transform: scale(1.08);
 }
 
-/* ── Auth Buttons ── */
+/* Auth buttons */
 .btn-login {
-  color: #8888aa;
+  padding: 0.38rem 0.9rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: transparent;
+  border: 1.5px solid var(--accent);
   text-decoration: none;
-  font-size: 0.88rem;
-  font-weight: 500;
-  padding: 0.4rem 0.85rem;
-  border-radius: 8px;
-  transition: color 0.2s, background 0.2s;
+  transition: all 0.15s;
 }
 
 .btn-login:hover {
-  color: #e0e0ff;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--accent-bg);
 }
 
 .btn-register {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  padding: 0.38rem 0.9rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.85rem;
+  font-weight: 600;
   color: #fff;
-  padding: 0.4rem 1rem;
-  border-radius: 8px;
+  background: var(--accent);
+  border: 1.5px solid transparent;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 0.86rem;
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
-  transition: opacity 0.18s, transform 0.18s;
+  transition: background 0.15s;
 }
 
 .btn-register:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  background: var(--accent-hover);
 }
 
 /* ── Responsive ── */
@@ -171,11 +149,11 @@
   }
 
   .navbar-right {
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .balance-chip {
-    padding: 0.28rem 0.6rem;
+    padding: 0.25rem 0.55rem;
     gap: 0.2rem;
   }
 
@@ -183,28 +161,28 @@
     display: none;
   }
 
-  .balance-amt {
-    font-size: 0.82rem;
-  }
-
   .balance-unit {
     display: none;
+  }
+
+  .balance-amt {
+    font-size: 0.8rem;
   }
 
   .avatar-initials {
     width: 30px;
     height: 30px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
   .admin-pill {
-    font-size: 0.74rem;
-    padding: 0.25rem 0.55rem;
+    font-size: 0.72rem;
+    padding: 0.22rem 0.5rem;
   }
 
   .btn-login,
   .btn-register {
-    font-size: 0.82rem;
-    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
   }
 }

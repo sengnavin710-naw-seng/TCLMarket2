@@ -1,39 +1,42 @@
 .lb-page {
     max-width: 900px;
     margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
+    padding: 1.5rem 1.25rem 4rem;
 }
 
 /* ── Header ── */
 .lb-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .lb-header h1 {
-    font-size: 2rem;
-    color: #fff;
+    font-size: 1.75rem;
+    color: var(--text);
     font-weight: 800;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
 }
 
 .lb-header p {
-    color: #6b6b8a;
+    color: var(--text-muted);
     margin-bottom: 1rem;
+    font-size: 0.9rem;
 }
 
 .my-rank-badge {
     display: inline-block;
-    background: rgba(124, 58, 237, 0.15);
-    border: 1px solid rgba(124, 58, 237, 0.4);
-    color: #a78bfa;
+    background: var(--accent-bg);
+    border: 1px solid #ddd6fe;
+    color: var(--accent);
     padding: 0.4rem 1.2rem;
     border-radius: 99px;
     font-size: 0.88rem;
+    font-weight: 600;
 }
 
 .my-rank-badge strong {
-    color: #fff;
+    color: var(--accent-hover);
+    font-weight: 800;
 }
 
 /* ── Podium ── */
@@ -42,7 +45,7 @@
     justify-content: center;
     align-items: flex-end;
     gap: 1rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .podium-slot {
@@ -88,27 +91,27 @@
     width: 68px;
     height: 68px;
     font-size: 1.7rem;
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 20px rgba(245, 158, 11, .4);
 }
 
 .silver .podium-avatar {
     background: linear-gradient(135deg, #94a3b8, #64748b);
-    box-shadow: 0 0 12px rgba(148, 163, 184, 0.3);
+    box-shadow: 0 0 12px rgba(148, 163, 184, .3);
 }
 
 .bronze .podium-avatar {
     background: linear-gradient(135deg, #b45309, #92400e);
-    box-shadow: 0 0 12px rgba(180, 83, 9, 0.3);
+    box-shadow: 0 0 12px rgba(180, 83, 9, .3);
 }
 
 .podium-name {
-    color: #e0e0ff;
+    color: var(--text);
     font-weight: 700;
     font-size: 0.9rem;
 }
 
 .podium-balance {
-    color: #a0a0c0;
+    color: var(--text-muted);
     font-size: 0.8rem;
 }
 
@@ -123,44 +126,45 @@
 }
 
 .podium-base-1 {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.1));
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, .15), rgba(245, 158, 11, .05));
+    border: 1px solid rgba(245, 158, 11, .25);
+    color: #d97706;
     height: 80px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-top: 0.5rem;
+    padding-top: .5rem;
 }
 
 .podium-base-2 {
-    background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), rgba(148, 163, 184, 0.05));
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    color: #94a3b8;
+    background: linear-gradient(135deg, rgba(148, 163, 184, .15), rgba(148, 163, 184, .05));
+    border: 1px solid rgba(148, 163, 184, .2);
+    color: #64748b;
     height: 60px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-top: 0.5rem;
+    padding-top: .5rem;
 }
 
 .podium-base-3 {
-    background: linear-gradient(135deg, rgba(180, 83, 9, 0.2), rgba(180, 83, 9, 0.05));
-    border: 1px solid rgba(180, 83, 9, 0.2);
+    background: linear-gradient(135deg, rgba(180, 83, 9, .12), rgba(180, 83, 9, .05));
+    border: 1px solid rgba(180, 83, 9, .15);
     color: #b45309;
     height: 44px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-top: 0.4rem;
+    padding-top: .4rem;
 }
 
 /* ── Table ── */
 .lb-table-wrap {
-    background: var(--bg-card, #1e1e38);
-    border: 1px solid #32325a;
-    border-radius: 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
 .lb-table {
@@ -170,20 +174,20 @@
 }
 
 .lb-table thead th {
-    background: #18183a;
-    color: #8888aa;
-    font-size: 0.75rem;
+    background: var(--bg-card-2);
+    color: var(--text-muted);
+    font-size: 0.73rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    padding: 0.9rem 1rem;
+    padding: 0.85rem 1rem;
     text-align: left;
-    border-bottom: 1px solid #32325a;
+    border-bottom: 1px solid var(--border);
 }
 
 .lb-table tbody tr {
-    border-bottom: 1px solid #1e1e38;
-    transition: background 0.15s;
+    border-bottom: 1px solid var(--border-lt);
+    transition: background 0.13s;
 }
 
 .lb-table tbody tr:last-child {
@@ -191,23 +195,23 @@
 }
 
 .lb-table tbody tr:hover {
-    background: rgba(124, 58, 237, 0.05);
+    background: var(--accent-bg);
 }
 
 .lb-table tbody tr.lb-me {
-    background: rgba(124, 58, 237, 0.08);
-    border-left: 3px solid #7c3aed;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
 }
 
 .lb-table td {
-    padding: 1rem;
+    padding: 0.9rem 1rem;
     vertical-align: middle;
 }
 
 .lb-rank {
     font-size: 1.1rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--text);
     min-width: 50px;
 }
 
@@ -221,7 +225,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    background: linear-gradient(135deg, var(--accent), #818cf8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -232,16 +236,16 @@
 }
 
 .lb-username {
-    color: #e0e0ff;
+    color: var(--text);
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: .4rem;
 }
 
 .lb-you {
-    background: rgba(124, 58, 237, 0.2);
-    color: #a78bfa;
+    background: var(--accent-bg);
+    color: var(--accent);
     font-size: 0.68rem;
     padding: 0.1rem 0.45rem;
     border-radius: 99px;
@@ -250,20 +254,20 @@
 
 .lb-admin-tag {
     font-size: 0.68rem;
-    color: #f59e0b;
-    background: rgba(245, 158, 11, 0.1);
+    color: #b45309;
+    background: #fef3c7;
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
     font-weight: 600;
 }
 
 .lb-balance {
-    color: #f59e0b;
+    color: #d97706;
     font-weight: 700;
 }
 
 .lb-num {
-    color: #a0a0c0;
+    color: var(--text-muted);
     text-align: center;
 }
 
@@ -274,10 +278,14 @@
 .lb-loading {
     text-align: center;
     padding: 4rem;
-    color: #6b6b8a;
+    color: var(--text-muted);
 }
 
 @media (max-width: 640px) {
+    .lb-page {
+        padding: 1rem 0.85rem 3rem;
+    }
+
     .podium {
         gap: 0.5rem;
     }
@@ -288,6 +296,6 @@
 
     .lb-table thead th,
     .lb-table td {
-        padding: 0.7rem 0.6rem;
+        padding: 0.65rem 0.55rem;
     }
 }
