@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useLang } from '../context/LanguageContext';
 import './Profile.css';
 
 const StatCard = ({ icon, label, value, color }) => (
@@ -19,6 +20,7 @@ const Profile = () => {
     const { user, profile, logout, refreshProfile } = useAuth();
     const navigate = useNavigate();
     const toast = useToast();
+    const { t } = useLang();
     const fileInputRef = useRef(null);
 
     const handleLogout = async () => {
@@ -162,37 +164,37 @@ const Profile = () => {
                 />
                 <div className="profile-info">
                     <h1>{profile.username}</h1>
-                    <span className="profile-role">{profile.role === 'admin' ? '🛡️ Admin' : '👤 Member'}</span>
-                    <p className="profile-joined">Joined {new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                    <span className="profile-role">{profile.role === 'admin' ? t.profile.admin : t.profile.member}</span>
+                    <p className="profile-joined">{t.profile.joined} {new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
                 </div>
                 <div className="profile-balance-big">
-                    <span>Balance</span>
+                    <span>{t.profile.balance_label}</span>
                     <strong>💰 {Number(profile.balance).toFixed(2)}</strong>
-                    <small>points</small>
+                    <small>{t.profile.points}</small>
                 </div>
-                <button className="profile-logout-btn" onClick={handleLogout}>🚪 Logout</button>
+                <button className="profile-logout-btn" onClick={handleLogout}>{t.profile.logout}</button>
             </div>
 
             {/* Stats Grid */}
             <div className="stats-grid">
-                <StatCard icon="🎯" label="Total Bets" value={totalBets} color="#a78bfa" />
-                <StatCard icon="🏆" label="Won" value={wonBets} color="#10b981" />
-                <StatCard icon="❌" label="Lost" value={lostBets} color="#ef4444" />
-                <StatCard icon="⏳" label="Pending" value={pendingBets} color="#f59e0b" />
-                <StatCard icon="📈" label="Win Rate" value={`${winRate}%`} color="#6366f1" />
-                <StatCard icon="💸" label="Total Staked" value={`${totalStaked.toFixed(0)} pts`} color="#e0e0ff" />
-                <StatCard icon="💵" label="Total Won" value={`${totalWon.toFixed(0)} pts`} color="#10b981" />
-                <StatCard icon="📊" label="P&L" value={`${(totalWon - totalStaked).toFixed(0)} pts`}
+                <StatCard icon="🎯" label={t.profile.stat_total} value={totalBets} color="#a78bfa" />
+                <StatCard icon="🏆" label={t.profile.stat_won} value={wonBets} color="#10b981" />
+                <StatCard icon="❌" label={t.profile.stat_lost} value={lostBets} color="#ef4444" />
+                <StatCard icon="⏳" label={t.profile.stat_pending} value={pendingBets} color="#f59e0b" />
+                <StatCard icon="📈" label={t.profile.stat_winrate} value={`${winRate}%`} color="#6366f1" />
+                <StatCard icon="💸" label={t.profile.stat_staked} value={`${totalStaked.toFixed(0)} pts`} color="#e0e0ff" />
+                <StatCard icon="💵" label={t.profile.stat_wonamt} value={`${totalWon.toFixed(0)} pts`} color="#10b981" />
+                <StatCard icon="📊" label={t.profile.stat_pnl} value={`${(totalWon - totalStaked).toFixed(0)} pts`}
                     color={totalWon - totalStaked >= 0 ? '#10b981' : '#ef4444'} />
             </div>
 
             {/* Tabs */}
             <div className="profile-tabs">
                 <button className={`profile-tab ${tab === 'bets' ? 'active' : ''}`} onClick={() => setTab('bets')}>
-                    🎯 Bet History ({totalBets})
+                    {t.profile.tab_bets} ({totalBets})
                 </button>
                 <button className={`profile-tab ${tab === 'tx' ? 'active' : ''}`} onClick={() => setTab('tx')}>
-                    💳 Transactions ({transactions.length})
+                    {t.profile.tab_tx} ({transactions.length})
                 </button>
             </div>
 
@@ -201,7 +203,7 @@ const Profile = () => {
                 <div className="profile-loading">Loading...</div>
             ) : tab === 'bets' ? (
                 bets.length === 0 ? (
-                    <div className="empty-state">No bets yet. <a href="/markets">Browse Markets →</a></div>
+                    <div className="empty-state">{t.profile.no_bets} <a href="/markets">{t.profile.browse}</a></div>
                 ) : (
                     <div className="bet-history">
                         {bets.map(bet => (
@@ -215,10 +217,10 @@ const Profile = () => {
                                 </div>
                                 <div className="history-right">
                                     <div className="history-amounts">
-                                        <span>Stake: <strong>{Number(bet.stake).toFixed(0)} pts</strong></span>
-                                        <span>→ Potential: <strong>{Number(bet.potential_payout).toFixed(0)} pts</strong></span>
+                                        <span>{t.profile.stake} <strong>{Number(bet.stake).toFixed(0)} pts</strong></span>
+                                        <span>{t.profile.potential} <strong>{Number(bet.potential_payout).toFixed(0)} pts</strong></span>
                                         {bet.actual_payout !== null && bet.status !== 'pending' && (
-                                            <span>Payout: <strong style={{ color: statusStyle[bet.status] }}>{Number(bet.actual_payout).toFixed(0)} pts</strong></span>
+                                            <span>{t.profile.payout} <strong style={{ color: statusStyle[bet.status] }}>{Number(bet.actual_payout).toFixed(0)} pts</strong></span>
                                         )}
                                     </div>
                                     <span className="bet-status-badge" style={{ background: `${statusStyle[bet.status]}22`, color: statusStyle[bet.status] }}>
@@ -231,7 +233,7 @@ const Profile = () => {
                 )
             ) : (
                 transactions.length === 0 ? (
-                    <div className="empty-state">No transactions yet.</div>
+                    <div className="empty-state">{t.profile.no_tx}</div>
                 ) : (
                     <div className="tx-history">
                         {transactions.map(tx => (

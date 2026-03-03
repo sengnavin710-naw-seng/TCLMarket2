@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useLang } from '../context/LanguageContext';
 import './Auth.css';
 
 const Register = () => {
@@ -10,6 +11,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const { register, login } = useAuth();
+    const { t } = useLang();
     const navigate = useNavigate();
     const toast = useToast();
 
@@ -32,14 +34,14 @@ const Register = () => {
         <div className="auth-page">
             <div className="auth-card">
                 <div className="auth-logo">TCL</div>
-                <h2 className="auth-title">Create Account</h2>
-                <p className="auth-sub">Join free and get 1,000 virtual points instantly!</p>
+                <h2 className="auth-title">{t.register.title}</h2>
+                <p className="auth-sub">{t.register.subtitle}</p>
 
                 <form onSubmit={handleSubmit} className="auth-form">
                     {[
-                        { label: 'Username', type: 'text', value: username, set: setUsername, ph: 'cooltrader99' },
-                        { label: 'Email', type: 'email', value: email, set: setEmail, ph: 'you@example.com' },
-                        { label: 'Password', type: 'password', value: password, set: setPassword, ph: '••••••••' },
+                        { label: t.register.username, type: 'text', value: username, set: setUsername, ph: 'cooltrader99' },
+                        { label: t.register.email, type: 'email', value: email, set: setEmail, ph: 'you@example.com' },
+                        { label: t.register.password, type: 'password', value: password, set: setPassword, ph: '••••••••' },
                     ].map(({ label, type, value, set, ph }) => (
                         <div key={label} className="auth-field">
                             <label>{label}</label>
@@ -47,12 +49,12 @@ const Register = () => {
                         </div>
                     ))}
                     <button type="submit" className="auth-btn" disabled={loading}>
-                        {loading ? 'Creating account...' : 'Sign Up — Get 1,000 pts Free 🎁'}
+                        {loading ? t.register.loading : t.register.btn}
                     </button>
                 </form>
 
                 <p className="auth-footer">
-                    Already have an account? <Link to="/login">Login</Link>
+                    {t.register.footer} <Link to="/login">{t.register.login_link}</Link>
                 </p>
             </div>
         </div>

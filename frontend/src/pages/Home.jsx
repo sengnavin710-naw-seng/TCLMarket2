@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
+import { useLang } from '../context/LanguageContext';
 import './Home.css';
 
 const Home = () => {
     const { user } = useAuth();
+    const { t } = useLang();
     const navigate = useNavigate();
     const [stats, setStats] = useState({ markets: 0, users: 0, volume: 0, resolved: 0 });
     const [featured, setFeatured] = useState([]);
@@ -37,19 +39,18 @@ const Home = () => {
 
             {/* ══ Hero ══ */}
             <section className="hero">
-                <span className="hero-badge">🎯 Virtual Prediction Markets</span>
+                <span className="hero-badge">{t.home.badge}</span>
                 <h1 className="hero-title">
-                    Predict the Future,<br />
-                    <span className="hero-gradient">Win Virtual Points</span>
+                    {t.home.title1}<br />
+                    <span className="hero-gradient">{t.home.title2}</span>
                 </h1>
-                <p className="hero-sub">
-                    Bet on real-world outcomes using virtual currency.<br />
-                    No real money — just skill, strategy, and fun.
-                </p>
+                <p className="hero-sub">{t.home.sub.split('\n').map((line, i) => (
+                    <span key={i}>{line}{i === 0 && <br />}</span>
+                ))}</p>
                 {!user && (
                     <div className="hero-cta">
-                        <Link to="/register" className="btn-primary">Get 1,000 pts Free 🎁</Link>
-                        <Link to="/login" className="btn-ghost">Login →</Link>
+                        <Link to="/register" className="btn-primary">{t.home.cta_register}</Link>
+                        <Link to="/login" className="btn-ghost">{t.home.cta_login}</Link>
                     </div>
                 )}
             </section>
@@ -58,10 +59,10 @@ const Home = () => {
             <section className="stats-section">
                 <div className="stats-grid">
                     {[
-                        { icon: '📊', value: stats.markets, label: 'Total Markets' },
-                        { icon: '👥', value: stats.users, label: 'Traders' },
-                        { icon: '💰', value: `${stats.volume.toLocaleString()} pts`, label: 'Volume Traded' },
-                        { icon: '✅', value: stats.resolved, label: 'Resolved' },
+                        { icon: '📊', value: stats.markets, label: t.home.stat_markets },
+                        { icon: '👥', value: stats.users, label: t.home.stat_traders },
+                        { icon: '💰', value: `${stats.volume.toLocaleString()} pts`, label: t.home.stat_volume },
+                        { icon: '✅', value: stats.resolved, label: t.home.stat_resolved },
                     ].map(s => (
                         <div key={s.label} className="stat-card">
                             <div className="stat-icon">{s.icon}</div>
@@ -78,8 +79,8 @@ const Home = () => {
             {featured.length > 0 && (
                 <section>
                     <div className="sec-head">
-                        <h2>🔥 Hot Markets</h2>
-                        <Link to="/markets" className="sec-link">View All →</Link>
+                        <h2>{t.home.hot_markets}</h2>
+                        <Link to="/markets" className="sec-link">{t.home.view_all}</Link>
                     </div>
                     <div className="mkt-list">
                         {featured.map(m => {
@@ -96,7 +97,7 @@ const Home = () => {
                                     </div>
                                     <div className="mkt-row-odds">
                                         <div className="odds-pct">{yes}%</div>
-                                        <div className="odds-lbl">YES chance</div>
+                                        <div className="odds-lbl">{t.home.yes_chance}</div>
                                         <div className="odds-bar-mini">
                                             <div className="odds-bar-fill" style={{ width: `${yes}%` }} />
                                         </div>
@@ -111,14 +112,14 @@ const Home = () => {
             {/* ══ How it Works ══ */}
             <section className="how-section">
                 <div className="sec-head">
-                    <h2>How It Works</h2>
+                    <h2>{t.home.how_title}</h2>
                 </div>
                 <div className="how-grid">
                     {[
-                        { icon: '🎁', title: 'Get 1,000 Points', desc: 'Sign up free and receive 1,000 virtual points instantly.' },
-                        { icon: '📊', title: 'Pick a Market', desc: 'Browse markets on crypto, sports, politics & more.' },
-                        { icon: '🎯', title: 'Place Your Bet', desc: 'Stake on YES or NO. Odds shift with the crowd.' },
-                        { icon: '🏆', title: 'Collect Winnings', desc: 'Win? Get your payout automatically when market resolves.' },
+                        { icon: '🎁', title: t.home.how1_title, desc: t.home.how1_desc },
+                        { icon: '📊', title: t.home.how2_title, desc: t.home.how2_desc },
+                        { icon: '🎯', title: t.home.how3_title, desc: t.home.how3_desc },
+                        { icon: '🏆', title: t.home.how4_title, desc: t.home.how4_desc },
                     ].map(h => (
                         <div key={h.title} className="how-card">
                             <div className="how-icon">{h.icon}</div>
@@ -129,7 +130,7 @@ const Home = () => {
                 </div>
                 {!user && (
                     <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                        <Link to="/register" className="btn-primary">Create Free Account →</Link>
+                        <Link to="/register" className="btn-primary">{t.home.create_account}</Link>
                     </div>
                 )}
             </section>

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useLang } from '../context/LanguageContext';
 import Modal from '../components/Modal';
 import './MarketDetail.css';
 
@@ -28,6 +29,7 @@ const MarketDetail = () => {
     const { user, profile, refreshProfile } = useAuth();
     const navigate = useNavigate();
     const toast = useToast();
+    const { t } = useLang();
 
     const [market, setMarket] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -109,8 +111,8 @@ const MarketDetail = () => {
         }
     };
 
-    if (loading) return <div className="loading-center">Loading market...</div>;
-    if (!market) return <div className="loading-center">Market not found.</div>;
+    if (loading) return <div className="loading-center">{t.market.loading}</div>;
+    if (!market) return <div className="loading-center">{t.market.not_found}</div>;
 
     const isOpen = market.status === 'open';
     const isResolved = market.status === 'resolved';
@@ -143,27 +145,27 @@ const MarketDetail = () => {
                     <OddsBar yes={market.total_yes} no={market.total_no} pool={market.total_pool} />
 
                     <div className="detail-stats">
-                        <div className="stat"><span>Total Pool</span><strong>💰 {Number(market.total_pool).toFixed(0)} pts</strong></div>
-                        <div className="stat"><span>YES Pool</span><strong style={{ color: '#10b981' }}>{Number(market.total_yes).toFixed(0)} pts</strong></div>
-                        <div className="stat"><span>NO Pool</span><strong style={{ color: '#ef4444' }}>{Number(market.total_no).toFixed(0)} pts</strong></div>
-                        <div className="stat"><span>Closes</span><strong>{new Date(market.closing_date).toLocaleDateString()}</strong></div>
+                        <div className="stat"><span>{t.market.total_pool}</span><strong>💰 {Number(market.total_pool).toFixed(0)} pts</strong></div>
+                        <div className="stat"><span>{t.market.yes_pool}</span><strong style={{ color: '#10b981' }}>{Number(market.total_yes).toFixed(0)} pts</strong></div>
+                        <div className="stat"><span>{t.market.no_pool}</span><strong style={{ color: '#ef4444' }}>{Number(market.total_no).toFixed(0)} pts</strong></div>
+                        <div className="stat"><span>{t.market.closes}</span><strong>{new Date(market.closing_date).toLocaleDateString()}</strong></div>
                     </div>
 
                     {isResolved && (
                         <div className={`resolved-banner ${market.result}`}>
-                            🏆 Resolved: <strong>{market.result?.toUpperCase()}</strong>
+                            {t.market.resolved_banner} <strong>{market.result?.toUpperCase()}</strong>
                         </div>
                     )}
 
                     {/* My Bets */}
                     {myBets.length > 0 && (
                         <div className="my-bets">
-                            <h3>My Bets</h3>
+                            <h3>{t.market.my_bets}</h3>
                             {myBets.map(bet => (
                                 <div key={bet.id} className={`bet-row ${bet.status}`}>
                                     <span className={`bet-side ${bet.side}`}>{bet.side.toUpperCase()}</span>
                                     <span>{Number(bet.stake).toFixed(0)} pts</span>
-                                    <span>→ {Number(bet.potential_payout).toFixed(0)} pts potential</span>
+                                    <span>→ {Number(bet.potential_payout).toFixed(0)} {t.market.potential}</span>
                                     <span className="bet-status">{bet.status}</span>
                                 </div>
                             ))}
@@ -173,13 +175,13 @@ const MarketDetail = () => {
 
                 {/* Right: Bet Panel */}
                 <div className="bet-panel">
-                    <h2>Place a Bet</h2>
+                    <h2>{t.market.place_bet}</h2>
 
                     {!isOpen ? (
-                        <p className="market-closed-msg">This market is {market.status} — no more bets.</p>
+                        <p className="market-closed-msg">{t.market.closed_msg.replace('{status}', market.status)}</p>
                     ) : (
                         <>
-                            {user && <p className="balance-info">Balance: <strong>💰 {Number(profile?.balance ?? 0).toFixed(2)} pts</strong></p>}
+                            {user && <p className="balance-info">{t.market.balance} <strong>💰 {Number(profile?.balance ?? 0).toFixed(2)} pts</strong></p>}
 
                             {/* Side selector */}
                             <div className="side-selector">
@@ -193,9 +195,9 @@ const MarketDetail = () => {
 
                             {/* Stake input */}
                             <div className="stake-input-wrap">
-                                <label>Stake (pts)</label>
+                                <label>{t.market.stake_label}</label>
                                 <input type="number" min="1" value={stake} onChange={e => setStake(e.target.value)}
-                                    placeholder="Enter amount..." className="stake-input" />
+                                    placeholder={t.market.stake_placeholder} className="stake-input" />
                                 <div className="quick-bets">
                                     {[10, 50, 100, 500].map(v => (
                                         <button key={v} onClick={() => setStake(String(v))} className="quick-btn">{v}</button>
@@ -206,19 +208,19 @@ const MarketDetail = () => {
                             {/* Payout preview */}
                             {stake && !isNaN(stake) && Number(stake) > 0 && (
                                 <div className="payout-preview">
-                                    <span>Potential payout</span>
+                                    <span>{t.market.potential_payout}</span>
                                     <strong>🎯 {calcPayout()} pts</strong>
                                 </div>
                             )}
 
 
                             <button onClick={handleBet} disabled={betting} className="bet-submit">
-                                {betting ? 'Placing bet...' : `Bet ${stake || '?'} pts on ${side.toUpperCase()}`}
+                                {betting ? t.market.placing : t.market.bet_btn.replace('{stake}', stake || '?').replace('{side}', side.toUpperCase())}
                             </button>
 
                             {!user && (
                                 <p className="login-hint">
-                                    <a href="/login">Login</a> or <a href="/register">Sign Up</a> to bet
+                                    {t.market.login_hint_pre}<a href="/login">{t.market.login_hint_link1}</a>{t.market.login_hint_mid}<a href="/register">{t.market.login_hint_link2}</a>{t.market.login_hint_post}
                                 </p>
                             )}
                         </>
@@ -230,31 +232,31 @@ const MarketDetail = () => {
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                title="Confirm Your Bet"
-                footer={(
+                title={t.market.confirm_title}
+                footer={
                     <>
-                        <button className="btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                        <button className={`btn-confirm ${side}`} onClick={confirmBet}>Confirm Bet</button>
+                        <button className="btn-cancel" onClick={() => setIsModalOpen(false)}>{t.market.cancel}</button>
+                        <button className={`btn-confirm ${side}`} onClick={confirmBet}>{t.market.confirm_btn}</button>
                     </>
-                )}
+                }
             >
                 <div className="confirm-modal-body">
-                    <p className="confirm-q">Are you sure you want to bet on this market?</p>
+                    <p className="confirm-q">{t.market.confirm_q}</p>
                     <div className="confirm-details">
                         <div className="confirm-item">
-                            <span>Market</span>
+                            <span>{t.market.label_market}</span>
                             <strong>{market.title}</strong>
                         </div>
                         <div className="confirm-item">
-                            <span>Prediction</span>
+                            <span>{t.market.label_prediction}</span>
                             <strong className={`side-text ${side}`}>{side.toUpperCase()}</strong>
                         </div>
                         <div className="confirm-item">
-                            <span>Stake</span>
+                            <span>{t.market.label_stake}</span>
                             <strong>💰 {Number(stake).toLocaleString()} pts</strong>
                         </div>
                         <div className="confirm-item">
-                            <span>Potential Payout</span>
+                            <span>{t.market.label_potential}</span>
                             <strong className="payout-text">🎯 {calcPayout()} pts</strong>
                         </div>
                     </div>

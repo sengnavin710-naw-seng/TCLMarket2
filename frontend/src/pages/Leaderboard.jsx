@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
+import { useLang } from '../context/LanguageContext';
 import './Leaderboard.css';
 
 const Leaderboard = () => {
     const { user } = useAuth();
+    const { t } = useLang();
     const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [myRank, setMyRank] = useState(null);
@@ -70,15 +72,15 @@ const Leaderboard = () => {
     return (
         <div className="lb-page">
             <div className="lb-header">
-                <h1>🏆 Leaderboard</h1>
-                <p>Top traders ranked by virtual balance</p>
+                <h1>{t.leaderboard.title}</h1>
+                <p>{t.leaderboard.subtitle}</p>
                 {myRank && (
-                    <div className="my-rank-badge">Your Rank: <strong>#{myRank}</strong></div>
+                    <div className="my-rank-badge">{t.leaderboard.your_rank} <strong>#{myRank}</strong></div>
                 )}
             </div>
 
             {loading ? (
-                <div className="lb-loading">Loading rankings...</div>
+                <div className="lb-loading">{t.leaderboard.loading}</div>
             ) : (
                 <>
                     {/* ── Top 3 Podium ── */}
@@ -134,13 +136,13 @@ const Leaderboard = () => {
                         <table className="lb-table">
                             <thead>
                                 <tr>
-                                    <th>Rank</th>
-                                    <th>Trader</th>
-                                    <th>Balance</th>
-                                    <th>Bets</th>
-                                    <th>Won</th>
-                                    <th>Win Rate</th>
-                                    <th>P&amp;L</th>
+                                    <th>{t.leaderboard.col_rank}</th>
+                                    <th>{t.leaderboard.col_trader}</th>
+                                    <th>{t.leaderboard.col_balance}</th>
+                                    <th>{t.leaderboard.col_bets}</th>
+                                    <th>{t.leaderboard.col_won}</th>
+                                    <th>{t.leaderboard.col_winrate}</th>
+                                    <th>{t.leaderboard.col_pnl}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,7 +160,7 @@ const Leaderboard = () => {
                                             <div>
                                                 <div className="lb-username">
                                                     {p.username}
-                                                    {user && p.id === user.id && <span className="lb-you">You</span>}
+                                                    {user && p.id === user.id && <span className="lb-you">{t.leaderboard.you}</span>}
                                                 </div>
                                                 {p.role === 'admin' && <span className="lb-admin-tag">Admin</span>}
                                             </div>
