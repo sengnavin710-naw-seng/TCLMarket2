@@ -18,19 +18,50 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        let profileChannel = null;
+
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null);
-            if (session?.user) fetchProfile(session.user.id);
+            if (session?.user) {
+                fetchProfile(session.user.id);
+                // Realtime: อัปเดต balance ทันทีเมื่อ admin จ่าย payout
+                profileChannel = supabase
+                    .channel(`user-profile-${session.user.id}`)
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'users',
+                        filter: `id=eq.${session.user.id}`
+                    }, (payload) => setProfile(payload.new))
+                    .subscribe();
+            }
             setLoading(false);
         });
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
-            if (session?.user) fetchProfile(session.user.id);
-            else setProfile(null);
+            if (session?.user) {
+                fetchProfile(session.user.id);
+                if (profileChannel) supabase.removeChannel(profileChannel);
+                profileChannel = supabase
+                    .channel(`user-profile-${session.user.id}`)
+                    .on('postgres_changes', {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'users',
+                        filter: `id=eq.${session.user.id}`
+                    }, (payload) => setProfile(payload.new))
+                    .subscribe();
+            } else {
+                setProfile(null);
+                if (profileChannel) supabase.removeChannel(profileChannel);
+            }
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            subscription.unsubscribe();
+            if (profileChannel) supabase.removeChannel(profileChannel);
+        };
     }, []);
 
     const register = async (email, password, username) => {

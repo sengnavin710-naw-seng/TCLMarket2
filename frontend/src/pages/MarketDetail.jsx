@@ -56,6 +56,8 @@ const MarketDetail = () => {
         const channel = supabase.channel(`market-${id}`)
             .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'markets', filter: `id=eq.${id}` },
                 (payload) => setMarket(payload.new))
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'bets', filter: `market_id=eq.${id}` },
+                () => { fetchMarket(); fetchMyBets(); })
             .subscribe();
 
         return () => supabase.removeChannel(channel);

@@ -5,8 +5,25 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// รายชื่อ origins ที่อนุญาต (dev + production)
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:4173',
+    process.env.CLIENT_URL,
+].filter(Boolean);
+
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(cors({
+    origin: (origin, callback) => {
+        // รองรับ curl / Postman (origin = undefined) หรือ origin ที่อยู่ใน list
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS not allowed for origin: ${origin}`));
+        }
+    },
+    credentials: true,
+}));
 app.use(express.json());
 
 // Routes

@@ -83,6 +83,14 @@ const Profile = () => {
     useEffect(() => {
         if (!user) { navigate('/login'); return; }
         fetchData();
+
+        const channel = supabase
+            .channel(`profile-rt-${user.id}`)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'bets', filter: `user_id=eq.${user.id}` }, fetchData)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions', filter: `user_id=eq.${user.id}` }, fetchData)
+            .subscribe();
+
+        return () => supabase.removeChannel(channel);
     }, [user]);
 
     const fetchData = async () => {

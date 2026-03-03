@@ -25,6 +25,18 @@ const AdminPanel = () => {
         if (!user || profile?.role !== 'admin') { navigate('/'); return; }
         if (tab === 'markets') fetchMarkets();
         if (tab === 'users') fetchUsers();
+
+        const channel = supabase
+            .channel('admin-rt')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'markets' }, () => {
+                if (tab === 'markets') fetchMarkets();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
+                if (tab === 'users') fetchUsers();
+            })
+            .subscribe();
+
+        return () => supabase.removeChannel(channel);
     }, [user, profile, tab]);
 
     const fetchUsers = async () => {

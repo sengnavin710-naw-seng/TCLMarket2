@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: tclmarket2-api
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: CLIENT_URL
+        sync: false

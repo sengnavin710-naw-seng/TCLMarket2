@@ -11,6 +11,14 @@ const Leaderboard = () => {
 
     useEffect(() => {
         fetchLeaderboard();
+
+        const channel = supabase
+            .channel('leaderboard-rt')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, fetchLeaderboard)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'bets' }, fetchLeaderboard)
+            .subscribe();
+
+        return () => supabase.removeChannel(channel);
     }, []);
 
     const fetchLeaderboard = async () => {

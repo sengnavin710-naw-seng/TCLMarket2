@@ -55,7 +55,7 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
     }
 });
 
-// PATCH /api/markets/:id/resolve — Resolve market (Admin only)
+// PATCH /api/markets/:id/resolve — Resolve market via RPC (Admin only)
 router.patch('/:id/resolve', authenticate, requireAdmin, async (req, res) => {
     try {
         const { result } = req.body;
@@ -65,48 +65,51 @@ router.patch('/:id/resolve', authenticate, requireAdmin, async (req, res) => {
 
         const { data: market } = await supabase
             .from('markets')
-            .select('*')
+            .select('status')
             .eq('id', req.params.id)
             .single();
 
         if (!market) return res.status(404).json({ error: 'Market not found' });
-        if (market.status !== 'closed' && market.status !== 'open') {
+        if (!['open', 'closed'].includes(market.status)) {
             return res.status(400).json({ error: 'Market cannot be resolved' });
         }
 
-        // Update market status
-        await supabase
-            .from('markets')
-            .update({ status: 'resolved', result, resolved_at: new Date().toISOString() })
-            .eq('id', req.params.id);
+        // ใช้ RPC resolve_market — atomic payout ทั้งหมดในครั้งเดียว
+        const { data, error } = await supabase.rpc('resolve_market', {
+            p_market_id: req.params.id,
+            p_result: result
+        });
 
-        // Payout winners
-        const { data: bets } = await supabase
-            .from('bets')
-            .select('*')
-            .eq('market_id', req.params.id)
-            .eq('status', 'pending');
-
-        for (const bet of bets) {
-            if (bet.side === result) {
-                await supabase.from('users')
-                    .update({ balance: supabase.rpc('increment', { x: bet.potential_payout }) })
-                    .eq('id', bet.user_id);
-
-                await supabase.rpc('increment_balance', {
-                    p_user_id: bet.user_id,
-                    p_amount: bet.potential_payout
-                });
-
-                await supabase.from('bets').update({ status: 'won', actual_payout: bet.potential_payout }).eq('id', bet.id);
-            } else {
-                await supabase.from('bets').update({ status: 'lost', actual_payout: 0 }).eq('id', bet.id);
-            }
-        }
-
-        res.json({ message: 'Market resolved successfully' });
+        if (error) return res.status(400).json({ error: error.message });
+        res.json({ message: 'Market resolved successfully', data });
     } catch (err) {
         res.status(500).json({ error: 'Failed to resolve market' });
+    }
+});
+
+// PATCH /api/markets/:id/cancel — Cancel market + refund all (Admin only)
+router.patch('/:id/cancel', authenticate, requireAdmin, async (req, res) => {
+    try {
+        const { data: market } = await supabase
+            .from('markets')
+            .select('status')
+            .eq('id', req.params.id)
+            .single();
+
+        if (!market) return res.status(404).json({ error: 'Market not found' });
+        if (market.status === 'resolved' || market.status === 'cancelled') {
+            return res.status(400).json({ error: 'Market is already resolved or cancelled' });
+        }
+
+        // ใช้ RPC cancel_market — refund ทุก bet ในครั้งเดียว
+        const { data, error } = await supabase.rpc('cancel_market', {
+            p_market_id: req.params.id
+        });
+
+        if (error) return res.status(400).json({ error: error.message });
+        res.json({ message: 'Market cancelled and all bets refunded', data });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to cancel market' });
     }
 });
 

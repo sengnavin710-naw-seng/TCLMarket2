@@ -11,8 +11,12 @@ const authenticate = async (req, res, next) => {
 
         const { data: { user }, error } = await supabase.auth.getUser(token);
 
+        // DEBUG LOG — จะลบออกหลัง test เสร็จ
+        if (error) console.error('[AUTH DEBUG] Supabase getUser error:', JSON.stringify(error));
+        if (!user) console.error('[AUTH DEBUG] No user returned, token prefix:', token.substring(0, 30));
+
         if (error || !user) {
-            return res.status(401).json({ error: 'Invalid or expired token' });
+            return res.status(401).json({ error: 'Invalid or expired token', debug: error?.message });
         }
 
         // Fetch user profile from public.users

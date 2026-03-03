@@ -1,0 +1,85 @@
+### ===================================================
+### TCLMarket2 — API Test File
+### วิธีใช้: ติดตั้ง "REST Client" extension แล้วกด "Send Request" เหนือแต่ละ request
+### ===================================================
+
+@baseUrl = http://localhost:5000
+@token = eyJhbGciOiJFUzI1NiIsImtpZCI6ImVhZDZlNTVkLTNjMjItNGUxMC1hMmI3LTg0YjkyZTVjYmMxYSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL29zcXd1anB1bHdqb2xmZmlzbG5nLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmYmMxODcyZi02ZjlhLTQxNzMtYjBlOS1kZWNhNjAwM2VmNGMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyNTUwMjM4LCJpYXQiOjE3NzI1NDY2MzgsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzcyNTQ2NjM4fV0sInNlc3Npb25faWQiOiIwMzU5OWIxOC0zNDFhLTQzYjgtOWJkZC1mYWM2ZTJlZjc0N2EiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.wLlxQCqg5wEWg1IXN9VZPHgGTsxI9wmDR4js4V7Cwcfs8L_ZLauRtn1mbhsrKUfZkqmVazn2Q6lgcgmCdq-y5w
+
+### ✅ 1. Health Check
+GET {{baseUrl}}/health
+
+###
+
+### ✅ 2. Get All Markets (ไม่ต้อง Login)
+GET {{baseUrl}}/api/markets
+
+###
+
+### ✅ 3. Leaderboard (ไม่ต้อง Login)
+GET {{baseUrl}}/api/users/leaderboard
+
+###
+
+### 🔐 4. Register (สมัครสมาชิก)
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Test1234",
+  "username": "testuser"
+}
+
+###
+
+### 🔑 5. Login — (ถ้า token หมดอายุให้ Login ใหม่แล้ว copy token ใส่ @token บนสุด)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Test1234"
+}
+
+###
+
+### 👤 6. Get My Profile (ต้องใส่ token ก่อน)
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{token}}
+
+###
+
+### 📜 7. My Transactions
+GET {{baseUrl}}/api/users/me/transactions
+Authorization: Bearer {{token}}
+
+###
+
+### 🎰 8. Place Bet (ต้องมี market_id จาก request #2)
+POST {{baseUrl}}/api/bets
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "market_id": "PASTE_MARKET_ID_HERE",
+  "side": "yes",
+  "stake": 100
+}
+
+###
+
+### 📋 9. My Bets
+GET {{baseUrl}}/api/bets/my
+Authorization: Bearer {{token}}
+
+###
+
+### 🔒 10. Security Test — No Token (ควรได้ 401)
+GET {{baseUrl}}/api/users/me
+
+###
+
+### 🔒 11. Security Test — Fake Token (ควรได้ 401)
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer fake_token_123
