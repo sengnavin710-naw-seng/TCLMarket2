@@ -173,3 +173,19 @@
     padding-top: 4px;
     border-top: 1px solid var(--border-lt, var(--border));
 }
+
+@media (max-width: 480px) {
+    .mkt-card {
+        padding: 12px;
+        gap: 8px;
+    }
+    .mkt-card-title {
+        font-size: 0.88rem;
+    }
+    .prob-pct {
+        font-size: 1.6rem;
+    }
+    .mkt-btn {
+        padding: 6px 0;
+    }
+}

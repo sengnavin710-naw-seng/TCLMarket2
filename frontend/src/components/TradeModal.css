@@ -222,3 +222,14 @@
     padding: 0 20px 16px;
 }
 .trade-login-hint a { color: var(--yes); font-weight: 600; }
+
+@media (max-width: 480px) {
+    .trade-overlay { padding: 10px; }
+    .trade-header { padding: 14px 16px 12px; }
+    .trade-sides { padding: 12px 16px; gap: 8px; }
+    .trade-side { padding: 10px; }
+    .trade-input-section { padding: 0 16px 12px; }
+    .trade-preview { margin: 0 16px 16px; }
+    .trade-submit { width: calc(100% - 32px); margin: 0 16px 16px; }
+    .trade-login-hint { padding: 0 16px 12px; }
+}

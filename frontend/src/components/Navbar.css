@@ -252,3 +252,16 @@
     .search-toggle-btn { display: flex; }
     .balance-chip .balance-icon + .balance-amt { display: block; }
 }
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0 12px;
+        gap: 8px;
+    }
+    .category-bar {
+        padding: 0 12px;
+    }
+    .navbar-brand {
+        font-size: 1rem;
+    }
+}
