@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
+const { authenticate, requireAdmin } = require('../middleware/auth');
 
 // GET /api/users/me — Get own profile
 router.get('/me', authenticate, async (req, res) => {
@@ -49,6 +49,26 @@ router.get('/leaderboard', async (req, res) => {
         res.json(data);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch leaderboard' });
+    }
+});
+
+// POST /api/users/add-balance — Admin: add balance to a user
+router.post('/add-balance', authenticate, requireAdmin, async (req, res) => {
+    try {
+        const { target_user_id, amount } = req.body;
+        if (!target_user_id || !amount || Number(amount) <= 0) {
+            return res.status(400).json({ error: 'target_user_id and positive amount are required' });
+        }
+
+        const { error } = await supabase.rpc('add_balance', {
+            p_target_user_id: target_user_id,
+            p_amount: Number(amount)
+        });
+
+        if (error) return res.status(400).json({ error: error.message });
+        res.json({ message: `Added ${amount} pts successfully` });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to add balance' });
     }
 });
 

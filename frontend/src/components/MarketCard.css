@@ -1,0 +1,175 @@
+.mkt-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, transform 0.18s, box-shadow 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+}
+.mkt-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(109,40,217,0.05), transparent 70%);
+    pointer-events: none;
+}
+.mkt-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Top row */
+.mkt-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.mkt-cat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.live-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--yes);
+    box-shadow: 0 0 6px var(--yes);
+    animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Title */
+.mkt-card-title {
+    font-size: 0.95rem;
+    font-weight: 650;
+    line-height: 1.4;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Probability row */
+.mkt-card-prob-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.mkt-prob-big {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.prob-pct {
+    font-size: 1.9rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+}
+.prob-label {
+    font-size: 0.68rem;
+    color: var(--text-soft);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sparkline { opacity: 0.85; }
+
+/* Odds bar */
+.mkt-bar {
+    display: flex;
+    height: 4px;
+    border-radius: 99px;
+    overflow: hidden;
+    background: var(--bg-card-2);
+}
+.mkt-bar-yes {
+    background: var(--yes);
+    transition: width 0.6s ease;
+    border-radius: 99px 0 0 99px;
+}
+.mkt-bar-no {
+    background: var(--no);
+    transition: width 0.6s ease;
+    border-radius: 0 99px 99px 0;
+}
+.mkt-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* Action buttons */
+.mkt-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 2px;
+}
+.mkt-btn {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border-radius: var(--radius-xs);
+    letter-spacing: 0.02em;
+}
+
+/* Resolved banner */
+.mkt-resolved-banner {
+    padding: 8px 12px;
+    border-radius: var(--radius-xs);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+.mkt-resolved-banner.yes { background: var(--yes-dim); color: var(--yes); }
+.mkt-resolved-banner.no  { background: var(--no-dim);  color: var(--no); }
+
+.mkt-closed-label {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    letter-spacing: 0.06em;
+    padding: 6px;
+    background: var(--bg-card-2);
+    border-radius: var(--radius-xs);
+}
+
+/* Footer */
+.mkt-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    color: var(--text-soft);
+    font-weight: 500;
+    padding-top: 4px;
+    border-top: 1px solid var(--border-lt, var(--border));
+}

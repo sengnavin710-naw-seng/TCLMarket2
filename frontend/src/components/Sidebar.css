@@ -1,0 +1,90 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.sidebar-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 14px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card-2);
+}
+.sidebar-icon { font-size: 0.9rem; }
+
+.sidebar-list { display: flex; flex-direction: column; }
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border-lt, var(--border));
+}
+.sidebar-item:last-child { border-bottom: none; }
+.sidebar-item:hover { background: var(--bg-card-2); }
+
+.sidebar-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+.sidebar-item-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+}
+.sidebar-item-vol {
+    font-size: 0.68rem;
+    color: var(--text-soft);
+    font-weight: 500;
+}
+
+.sidebar-item-pct {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+.pct-arrow { font-size: 0.65rem; }
+
+.sidebar-result {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 99px;
+    flex-shrink: 0;
+}
+.sidebar-result.yes { background: var(--yes-dim); color: var(--yes); }
+.sidebar-result.no  { background: var(--no-dim);  color: var(--no); }
+
+.sidebar-empty {
+    padding: 12px 14px;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+}

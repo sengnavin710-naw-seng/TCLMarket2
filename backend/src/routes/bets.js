@@ -17,14 +17,8 @@ router.post('/', authenticate, async (req, res) => {
             return res.status(400).json({ error: 'Stake must be greater than 0' });
         }
 
-        // Use Supabase auth context for RPC
-        const { createClient } = require('@supabase/supabase-js');
-        const userSupabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_SERVICE_KEY
-        );
-
-        const { data, error } = await userSupabase.rpc('place_bet', {
+        const { data, error } = await supabase.rpc('place_bet', {
+            p_user_id: req.user.id,
             p_market_id: market_id,
             p_side: side,
             p_stake: stake

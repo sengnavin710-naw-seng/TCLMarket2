@@ -1,378 +1,90 @@
-/* ── Markets Page ── */
 .markets-page {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 1.5rem 1.25rem 4rem;
-}
-
-.markets-header {
-    margin-bottom: 1.25rem;
-}
-
-.markets-header h1 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 0.25rem;
-}
-
-.markets-header p {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-/* ── Search bar ── */
-.markets-search-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.search-icon {
-    position: absolute;
-    left: 0.9rem;
-    font-size: 1rem;
-    pointer-events: none;
-    line-height: 1;
-}
-
-.markets-search {
-    width: 100%;
-    padding: 0.72rem 2.75rem 0.72rem 2.5rem;
-    background: var(--bg-card);
-    border: 1.5px solid var(--border);
-    border-radius: 99px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.markets-search:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(109, 40, 217, .1);
-}
-
-.markets-search::placeholder {
-    color: var(--text-soft);
-}
-
-.search-clear {
-    position: absolute;
-    right: 0.9rem;
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    line-height: 1;
-    padding: 0;
-    transition: color 0.15s;
-}
-
-.search-clear:hover {
-    color: var(--text);
-}
-
-/* Result count */
-.search-result-count {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-    font-weight: 500;
-}
-
-/* Highlight */
-.search-highlight {
-    background: #fef08a;
-    color: #713f12;
-    border-radius: 2px;
-    padding: 0 1px;
-}
-
-/* Filter tabs */
-.filter-tabs {
-    display: flex;
-    gap: 0.4rem;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
-}
-
-.filter-tab {
-    padding: 0.42rem 1rem;
-    border-radius: 99px;
-    border: 1.5px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text-muted);
-    font-size: 0.84rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
-}
-
-.filter-tab:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-.filter-tab.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(109, 40, 217, .25);
-}
-
-/* Markets list */
-.markets-grid {
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 20px;
 }
 
-/* Card image */
-.card-image {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--bg-card-2);
-    border: 1px solid var(--border-lt);
+/* Status tabs */
+.status-tabs {
+    display: flex;
+    gap: 6px;
+}
+.status-tab {
     display: flex;
     align-items: center;
-    justify-content: center;
-}
-
-.market-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.market-img-fallback {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--accent);
-}
-
-/* Market card — Polymarket row style */
-.market-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    text-decoration: none;
-    color: var(--text);
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.market-card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow-md);
-}
-
-/* Card left info */
-.card-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.card-top {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.35rem;
-}
-
-.category-badge {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--accent);
-    background: var(--accent-bg);
-    padding: 0.15rem 0.55rem;
+    gap: 6px;
+    padding: 7px 16px;
     border-radius: 99px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    transition: var(--transition);
+    cursor: pointer;
 }
-
-.status-dot {
+.status-tab:hover { color: var(--text); background: var(--bg-card); }
+.status-tab.active {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text);
+}
+.tab-live-dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    flex-shrink: 0;
+    background: var(--yes);
+    box-shadow: 0 0 6px var(--yes);
+    animation: pulse 1.8s infinite;
 }
-
-.card-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.35;
-    margin-bottom: 0.45rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.card-bottom {
-    display: flex;
-    gap: 0.85rem;
-    font-size: 0.74rem;
+.tab-count {
+    background: var(--bg-card-2);
     color: var(--text-muted);
-}
-
-/* Resolved badge */
-.result-badge {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.2rem 0.65rem;
     border-radius: 99px;
-    font-size: 0.72rem;
+    padding: 1px 7px;
+    font-size: 0.7rem;
     font-weight: 700;
 }
 
-.result-badge.yes {
-    background: var(--yes-bg);
-    color: var(--yes-text);
+/* Card Grid */
+.markets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+@media (max-width: 1024px) { .markets-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .markets-grid { grid-template-columns: 1fr; } }
+
+/* Skeleton loader */
+.markets-loader {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+@media (max-width: 1024px) { .markets-loader { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .markets-loader { grid-template-columns: 1fr; } }
+
+.card-skeleton {
+    height: 260px;
+    border-radius: var(--radius);
+    background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-2) 50%, var(--bg-card) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
-.result-badge.no {
-    background: var(--no-bg);
-    color: var(--no-text);
-}
-
-/* Odds panel (right side) */
-.card-odds {
-    flex-shrink: 0;
+/* Empty */
+.markets-empty {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 0.35rem;
-    min-width: 70px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 240px;
+    color: var(--text-soft);
 }
-
-.odds-pct {
-    font-size: 1.3rem;
-    font-weight: 800;
-    color: var(--yes);
-    line-height: 1;
-}
-
-.odds-lbl {
-    font-size: 0.68rem;
-    color: var(--text-muted);
-}
-
-/* Yes/No buttons on card */
-.card-yn {
-    display: flex;
-    gap: 0.35rem;
-}
-
-.btn-yes,
-.btn-no {
-    padding: 0.3rem 0.65rem;
-    border-radius: var(--radius-xs);
-    font-size: 0.8rem;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: opacity 0.15s;
-}
-
-.btn-yes {
-    background: var(--yes-bg);
-    color: var(--yes-text);
-}
-
-.btn-no {
-    background: var(--no-bg);
-    color: var(--no-text);
-}
-
-.btn-yes:hover,
-.btn-no:hover {
-    opacity: 0.8;
-}
-
-/* Odds bar (inside card) */
-.odds-bar-wrap {
-    margin-top: 0.55rem;
-}
-
-.odds-bar {
-    display: flex;
-    height: 5px;
-    border-radius: 99px;
-    overflow: hidden;
-    background: var(--no-bg);
-    width: 100%;
-}
-
-.odds-yes {
-    background: var(--yes);
-    border-radius: 99px 0 0 99px;
-}
-
-.odds-no {
-    background: var(--no);
-    border-radius: 0 99px 99px 0;
-}
-
-.odds-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 0.35rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-}
-
-.yes-label {
-    color: var(--yes);
-}
-
-.no-label {
-    color: var(--no);
-}
-
-/* Loading / Empty */
-.loading,
-.empty {
-    text-align: center;
-    padding: 3rem;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-/* ── Responsive ── */
-@media (max-width: 540px) {
-    .markets-page {
-        padding: 1rem 0.85rem 3rem;
-    }
-
-    .market-card {
-        flex-wrap: wrap;
-        gap: 0.6rem;
-    }
-
-    .card-odds {
-        width: 100%;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .card-yn {
-        order: 3;
-    }
-}
+.markets-empty span { font-size: 2.5rem; }
+.markets-empty p { font-size: 0.9rem; font-weight: 500; }

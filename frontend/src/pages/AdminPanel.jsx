@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
+import api from '../lib/api';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
@@ -156,16 +157,17 @@ const AdminPanel = () => {
     const handleAddBalance = async (userId, amount, username) => {
         if (!window.confirm(`Add ${amount} units to ${username}?`)) return;
         setSubmitting(true);
-        const { error } = await supabase.rpc('add_balance', {
-            p_target_user_id: userId,
-            p_amount: Number(amount)
-        });
-        if (error) {
-            setMsg({ type: 'error', text: error.message });
-        } else {
+        try {
+            await api.post('/users/add-balance', {
+                target_user_id: userId,
+                amount: Number(amount)
+            });
             setMsg({ type: 'success', text: `✅ Added ${amount} units to ${username}` });
-            setCustomAmounts({ ...customAmounts, [userId]: '' }); // Clear input on success
+            setCustomAmounts({ ...customAmounts, [userId]: '' });
             fetchUsers();
+        } catch (err) {
+            const errMsg = err.response?.data?.error || err.message || 'Failed to add balance';
+            setMsg({ type: 'error', text: errMsg });
         }
         setSubmitting(false);
     };

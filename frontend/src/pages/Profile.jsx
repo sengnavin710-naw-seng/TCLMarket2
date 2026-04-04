@@ -30,7 +30,6 @@ const Profile = () => {
 
     const [bets, setBets] = useState([]);
     const [transactions, setTransactions] = useState([]);
-    const [markets, setMarkets] = useState({});
     const [tab, setTab] = useState('bets');
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
@@ -99,22 +98,21 @@ const Profile = () => {
         setLoading(true);
 
         const [betsRes, txRes] = await Promise.all([
-            supabase.from('bets').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
-            supabase.from('transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50),
+            supabase
+                .from('bets')
+                .select('*, markets(id, title)')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false }),
+            supabase
+                .from('transactions')
+                .select('*, markets(id, title)')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false })
+                .limit(50),
         ]);
 
-        const betsData = betsRes.data || [];
-        setBets(betsData);
+        setBets(betsRes.data || []);
         setTransactions(txRes.data || []);
-
-        // Fetch market titles
-        if (betsData.length > 0) {
-            const marketIds = [...new Set(betsData.map(b => b.market_id))];
-            const { data: mData } = await supabase.from('markets').select('id, title').in('id', marketIds);
-            const mMap = {};
-            (mData || []).forEach(m => { mMap[m.id] = m.title; });
-            setMarkets(mMap);
-        }
         setLoading(false);
     };
 
@@ -211,7 +209,7 @@ const Profile = () => {
                                 <div className="history-left">
                                     <span className={`side-tag ${bet.side}`}>{bet.side.toUpperCase()}</span>
                                     <div className="history-title">
-                                        <a href={`/markets/${bet.market_id}`}>{markets[bet.market_id] ?? 'Loading...'}</a>
+                                        <a href={`/markets/${bet.market_id}`}>{bet.markets?.title ?? 'Unknown Market'}</a>
                                         <small>{fmtDate(bet.created_at)}</small>
                                     </div>
                                 </div>
@@ -242,6 +240,9 @@ const Profile = () => {
                                     <span className="tx-icon">{txTypeIcon[tx.type] ?? '💰'}</span>
                                     <div className="history-title">
                                         <strong style={{ color: txTypeStyle[tx.type] }}>{tx.type.toUpperCase()}</strong>
+                                        {tx.markets?.title && (
+                                            <a href={`/markets/${tx.market_id}`} style={{ fontSize: '0.8rem', opacity: 0.8 }}>{tx.markets.title}</a>
+                                        )}
                                         <span>{tx.description ?? '—'}</span>
                                         <small>{fmtDate(tx.created_at)}</small>
                                     </div>

@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useLang } from '../context/LanguageContext';
 import Modal from '../components/Modal';
+import api from '../lib/api';
 import './MarketDetail.css';
 
 const OddsBar = ({ yes, no, pool }) => {
@@ -90,21 +91,20 @@ const MarketDetail = () => {
         setIsModalOpen(false);
         setBetting(true);
         try {
-            const { error } = await supabase.rpc('place_bet', {
-                p_market_id: id,
-                p_side: side,
-                p_stake: Number(stake)
+            await api.post('/bets', {
+                market_id: id,
+                side,
+                stake: Number(stake)
             });
-            if (error) throw error;
             toast.success(`Bet placed! ${stake} pts on ${side.toUpperCase()} 🎯`);
             setStake('');
             fetchMarket();
             fetchMyBets();
             refreshProfile();
         } catch (err) {
-            const msg = err.message || 'Failed to place bet';
-            if (msg.includes('INSUFFICIENT_BALANCE')) toast.error('Insufficient balance 💸');
-            else if (msg.includes('MARKET_NOT_OPEN')) toast.error('Market is no longer open');
+            const msg = err.response?.data?.error || err.message || 'Failed to place bet';
+            if (msg.includes('INSUFFICIENT_BALANCE') || msg.includes('Insufficient')) toast.error('Insufficient balance 💸');
+            else if (msg.includes('MARKET_NOT_OPEN') || msg.includes('not open')) toast.error('Market is no longer open');
             else toast.error(msg);
         } finally {
             setBetting(false);
